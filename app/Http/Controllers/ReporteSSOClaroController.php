@@ -32,6 +32,7 @@ class ReporteSSOClaroController extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -53,14 +54,14 @@ class ReporteSSOClaroController extends Controller
 
                 $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reporteSSOAcreditado.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reporteSSOAcreditado.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
             if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
 
                 $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reporteSSOAcreditado.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reporteSSOAcreditado.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -86,6 +87,7 @@ class ReporteSSOClaroController extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){

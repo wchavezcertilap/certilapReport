@@ -45,6 +45,7 @@ class TrabajadoresPagadosPreController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -82,7 +83,7 @@ class TrabajadoresPagadosPreController extends Controller
             
             $empresasPrinpalesPagoD = super_unique($principalVista,'rutprincipal');
         
-        return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+        return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
     }
 
     /**
@@ -122,6 +123,7 @@ class TrabajadoresPagadosPreController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -392,7 +394,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioNOKactivo','usuarioAqua','usuarioABBChile')); 
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioNOKactivo','usuarioAqua','usuarioABBChile','usuarioClaroChile')); 
             }elseif (($empresasPrincipales!="" AND $empresasPrincipales[0]!=1) and $fechaSeleccion!="" and $empresaContratista!= "") {
                 
                 $folios = FolioSso::whereIn('sso_mcomp_rut',$empresasPrincipales)
@@ -497,7 +499,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
                 
             }elseif (($empresasPrincipales!="" or $$empresasPrincipales[0]!=1) and $fechaSeleccion!="" and $empresaContratista!= "" and $folio!= "") {
               
@@ -604,7 +606,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));    
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));    
             }elseif (($empresasPrincipales!="" or $$empresasPrincipales[0]!=1) and $fechaSeleccion!="" and $empresaContratista!= "" and $folio!= "" and $proyecto!= "") {
                
                 $folios = FolioSso::whereIn('sso_mcomp_rut',$empresasPrincipales)
@@ -711,7 +713,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioNOKactivo','usuarioABBChile'));    
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioNOKactivo','usuarioABBChile','usuarioClaroChile'));    
             }elseif (($empresasPrincipales!="" or $empresasPrincipales[0]!=1) and $fechaSeleccion!="" and $folio!= "") {
                 
                 $folios = FolioSso::whereIn('sso_mcomp_rut',$empresasPrincipales)
@@ -816,7 +818,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioNOKactivo','usuarioABBChile'));    
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioNOKactivo','usuarioABBChile','usuarioClaroChile'));    
             }elseif (($empresasPrincipales!="" or $empresasPrincipales[0]!=1) and $fechaSeleccion!="" and $proyecto!= "") {
                 
                 $folios = FolioSso::whereIn('sso_mcomp_rut',$empresasPrincipales)
@@ -921,7 +923,7 @@ class TrabajadoresPagadosPreController extends Controller
                     $lista.= "</tr>";
                 }
                 $lista.= "</table>";
-                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));    
+                return view('trabajadorPagadoSSO.index',compact('datosUsuarios','empresasPrinpalesPagoD','certificacion','lista','cantidadDatos','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));    
             }   
             
     }

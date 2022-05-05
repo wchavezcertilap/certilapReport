@@ -55,6 +55,7 @@ class ReporteAquaIntegradoController  extends Controller
         }
         $aquaChile = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -74,7 +75,7 @@ class ReporteAquaIntegradoController  extends Controller
                 $periodos = Periodo::orderBy('id', 'DES')->get();
                 $periodos->load('mes');
 
-                return view('reportesAquaChile.reporteIntegradoCaVSso',compact('datosUsuarios','EmpresasP','periodos','aquaChile','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reportesAquaChile.reporteIntegradoCaVSso',compact('datosUsuarios','EmpresasP','periodos','aquaChile','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
            
@@ -108,6 +109,7 @@ class ReporteAquaIntegradoController  extends Controller
         }
         $aquaChile = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -702,7 +704,7 @@ class ReporteAquaIntegradoController  extends Controller
             print_r($todoTrabajadores);
             echo "</pre>";*/
 
-             return view('reportesAquaChile.reporteIntegradoCaVSso',compact('todoTrabajadores','datosUsuarios','EmpresasP','periodos','aquaChile','usuarioABBChile','usuarioNOKactivo'));
+             return view('reportesAquaChile.reporteIntegradoCaVSso',compact('todoTrabajadores','datosUsuarios','EmpresasP','periodos','aquaChile','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
 
         } /// if existe en ambas plataformas
 

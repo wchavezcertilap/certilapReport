@@ -53,6 +53,7 @@ class ReporteAquaAcreditado extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -74,14 +75,14 @@ class ReporteAquaAcreditado extends Controller
 
                 $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reportesAquaChile.reporteAcreditacionTraSso',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reportesAquaChile.reporteAcreditacionTraSso',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
             if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
 
                 $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reportesAquaChile.reporteAcreditacionTraSso',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reportesAquaChile.reporteAcreditacionTraSso',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -107,6 +108,7 @@ class ReporteAquaAcreditado extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -159,7 +161,7 @@ class ReporteAquaAcreditado extends Controller
             if($cantidadCon > 0){
 
                 $idFolios = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->whereIn('sso_comp_rut',$rutcontratistasR)->
-                where('sso_status',1)->orderBy('id', 'ASC')->get(['id','sso_mcomp_rut','sso_mcomp_name','sso_mcomp_dv','sso_comp_rut','sso_comp_name','sso_comp_dv','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_cfgid'])->toArray();
+                where('sso_status',1)->orderBy('id', 'ASC')->get(['id','sso_mcomp_rut','sso_mcomp_name','sso_mcomp_dv','sso_comp_rut','sso_comp_name','sso_comp_dv','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_cfgid','sso_cycle_aprobdays','sso_cycle_cargadays'])->toArray();
 
                 $totalDoc = 0;
                 $totalAcreditados = 0;
@@ -167,14 +169,21 @@ class ReporteAquaAcreditado extends Controller
              
                 foreach ($idFolios as $id) {
 
-                    $idDocumentos = CargoCateDoc::where('cfg_id',$id['sso_cfgid'])->where('cargo_id',1)->get(['cat_id','doc_id'])->toArray();
-                    $totalDoc = count($idDocumentos);
+                    
 
              
                     $trabajadores = trabajadorSSO::where('worker_status','1')->where('sso_id',$id['id'])->get(['id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','sso_id'])->toArray();
 
 
                     foreach ($trabajadores as $trabajador) {
+
+                        $idDocumentos = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $id['sso_cfgid']])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $trabajador['worker_cargoid']])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
 
                         
 
@@ -215,7 +224,7 @@ class ReporteAquaAcreditado extends Controller
                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                        $porcentajeApro = ($totalDocAprobados * 100)/($idDocumentos);
                         if($porcentajeApro>=100){
                             $cantidadcien +=1; 
                         }else{
@@ -259,7 +268,7 @@ class ReporteAquaAcreditado extends Controller
                             $trabajadores["estado"]="Activo";
                             }
                         }              
-
+                        $trabajadores["ciclo"] = $id['sso_cycle_aprobdays']."X".$id['sso_cycle_cargadays'];
                         $WORK[] = $trabajadores;
                         $totalAcreditados = $totalAcreditados + $cantidadcien; 
                         $totalNoAcreditados = $totalNoAcreditados + $noAcreditado; 
@@ -269,7 +278,7 @@ class ReporteAquaAcreditado extends Controller
             }
         }else{
             
-            $idFolios = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->where('sso_status',1)->orderBy('id', 'ASC')->get(['id','sso_mcomp_rut','sso_mcomp_name','sso_mcomp_dv','sso_comp_rut','sso_comp_name','sso_comp_dv','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_cfgid'])->toArray();
+            $idFolios = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->where('sso_status',1)->orderBy('id', 'ASC')->get(['id','sso_mcomp_rut','sso_mcomp_name','sso_mcomp_dv','sso_comp_rut','sso_comp_name','sso_comp_dv','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_cfgid','sso_cycle_aprobdays','sso_cycle_cargadays'])->toArray();
 
   
             $totalDoc = 0;
@@ -285,11 +294,21 @@ class ReporteAquaAcreditado extends Controller
                
                 foreach ($trabajadores as $trabajador) {
 
-                $idDocumentos = CargoCateDoc::where('cfg_id',$id['sso_cfgid'])->where('cargo_id',$trabajador['worker_cargoid'])->get(['cat_id','doc_id'])->toArray();
+                //$idDocumentos = CargoCateDoc::where('cfg_id',$id['sso_cfgid'])->where('cargo_id',$trabajador['worker_cargoid'])->get(['cat_id','doc_id'])->toArray();
+
+                $idDocumentos = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $id['sso_cfgid']])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $trabajador['worker_cargoid']])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
+
                 if(!empty($idDocumentos)){
                     $totalDoc = count($idDocumentos);
                 }
 
+                
                  $documentos = EstadoDocumento::where('upld_sso_id', $trabajador['sso_id'])->where('upld_workerid',$trabajador['id'])->where('upld_status',1)->where('upld_type',1)->
                  get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
                     $totalDocRechazados = 0;
@@ -329,7 +348,11 @@ class ReporteAquaAcreditado extends Controller
                     $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                     $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                     $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                    $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                    if($idDocumentos!= 0){
+                        $porcentajeApro = ($totalDocAprobados * 100)/($idDocumentos);
+                    }else{
+                        $porcentajeApro = 0;    
+                    }
                     if($porcentajeApro>=100){
                         $cantidadcien +=1; 
                     }else{
@@ -374,7 +397,7 @@ class ReporteAquaAcreditado extends Controller
                             $trabajadores["estado"]="Activo";
                         }
                     }       
-
+                    $trabajadores["ciclo"] = $id['sso_cycle_aprobdays']."X".$id['sso_cycle_cargadays'];
                     $WORK[] = $trabajadores;
                     $totalAcreditados = $totalAcreditados + $cantidadcien; 
                     $totalNoAcreditados = $totalNoAcreditados + $noAcreditado; 
@@ -391,7 +414,7 @@ class ReporteAquaAcreditado extends Controller
         }
     
 
-        return view('reportesAquaChile.reporteAcreditacionTraSso',compact('WORK','datosUsuarios','EmpresasP','aquaChile','totalTrabajadores','totalAcreditados','totalNoAcreditados','certificacion','usuarioAqua','usuarioABBChile','estado','usuarioNOKactivo')); 
+        return view('reportesAquaChile.reporteAcreditacionTraSso',compact('WORK','datosUsuarios','EmpresasP','aquaChile','totalTrabajadores','totalAcreditados','totalNoAcreditados','certificacion','usuarioAqua','usuarioABBChile','estado','usuarioNOKactivo','usuarioClaroChile')); 
 
 
     }

@@ -21,6 +21,7 @@ class HistorialSsoController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $idUsuario = session('user_id');
         if($idUsuario ==  ""){
@@ -82,7 +83,7 @@ class HistorialSsoController extends Controller
         }
 
        
-            return view('historialSso.index',compact('datosUsuarios','EmpresasP','listaDatos','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('historialSso.index',compact('datosUsuarios','EmpresasP','listaDatos','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         
     }
 

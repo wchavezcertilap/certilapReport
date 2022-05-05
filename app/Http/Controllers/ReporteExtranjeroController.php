@@ -357,6 +357,7 @@ class ReporteExtranjeroController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
@@ -567,12 +568,12 @@ class ReporteExtranjeroController extends Controller
                     })->export('xls');
                 }else{
                 $nodatos =1;
-                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos'));
+                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos','usuarioClaroChile'));
                 }
 
             }else{
                 $nodatos =1;
-                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos'));
+                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos','usuarioClaroChile'));
             }
            
 
@@ -710,12 +711,12 @@ class ReporteExtranjeroController extends Controller
                     })->export('xls');
                 }else{
                 $nodatos =1;
-                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos'));
+                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos','usuarioClaroChile'));
                 }
 
             }else{
                 $nodatos =1;
-                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos'));
+                return view('reporteExtranjero.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','nodatos','usuarioClaroChile'));
             }
         }
 

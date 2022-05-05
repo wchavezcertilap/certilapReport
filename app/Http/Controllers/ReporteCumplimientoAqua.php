@@ -36,6 +36,7 @@ class ReporteCumplimientoAqua extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
@@ -54,7 +55,7 @@ class ReporteCumplimientoAqua extends Controller
 
                 $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reporteCumplimientoAqua.index',compact('datosUsuarios','EmpresasP','certificacion','etiquetasEstadosCovid','valoresCovid','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reporteCumplimientoAqua.index',compact('datosUsuarios','EmpresasP','certificacion','etiquetasEstadosCovid','valoresCovid','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
             if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
@@ -62,7 +63,7 @@ class ReporteCumplimientoAqua extends Controller
                 $rutprincipal = ['76452811','76794910','79872420','86247400','79800600','84449400','88274600','87782700','76495180','99595500','89604200','78754560','76125666','78512930'];
                 $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('reporteCumplimientoAqua.index',compact('datosUsuarios','EmpresasP','certificacion','etiquetasEstadosCovid','valoresCovid','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('reporteCumplimientoAqua.index',compact('datosUsuarios','EmpresasP','certificacion','etiquetasEstadosCovid','valoresCovid','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -91,6 +92,7 @@ class ReporteCumplimientoAqua extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);

@@ -42,6 +42,7 @@ class UsuarioDesactivarController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $principalesTexto = "";
@@ -59,7 +60,7 @@ class UsuarioDesactivarController extends Controller
         }
 
        
-        return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo'));
+        return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo','usuarioClaroChile'));
     
         //////// busqueda de datos //////
     }   
@@ -89,6 +90,7 @@ class UsuarioDesactivarController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $principalesTexto = "";
@@ -237,7 +239,7 @@ class UsuarioDesactivarController extends Controller
 
                     $lista.= "</table>";
                    
-                    return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo')); 
+                    return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo','usuarioClaroChile')); 
             }
            
         }if ($tipoBsuqueda == 1 and $estadoUsuario == 2){
@@ -322,7 +324,7 @@ class UsuarioDesactivarController extends Controller
 
                         $lista.= "</table>";
                 }
-                return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo')); 
+                return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo','usuarioClaroChile')); 
             }
         }
         if($tipoBsuqueda == 2 and $estadoUsuario == 1){
@@ -412,7 +414,7 @@ class UsuarioDesactivarController extends Controller
 
                     $lista.= "</table>";
                 }
-                return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo'));
+                return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo','usuarioClaroChile'));
             }
             
         }
@@ -490,7 +492,7 @@ class UsuarioDesactivarController extends Controller
 
                         $lista.= "</table>";
                 }
-                    return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo'));
+                    return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','USUARIOS','lista','usuarioDesactivados','usuarioEliminados','usuarioNOKactivo','usuarioClaroChile'));
             }
 
         }
@@ -545,6 +547,7 @@ class UsuarioDesactivarController extends Controller
             }
             $usuarioAqua = session('user_aqua');
             $usuarioABBChile= session('user_ABB');
+            $usuarioClaroChile= session('user_Claro');
             $certificacion = session('certificacion');
             $usuarioNOKactivo = session('usuario_nok');
             $principalesTexto = "";
@@ -559,7 +562,7 @@ class UsuarioDesactivarController extends Controller
             }
 
            
-            return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','usuarioEliminados','usuarioDesactivados','usuarioNOKactivo'));
+            return view('usuarioDesactiva.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','Contratistas','usuarioEliminados','usuarioDesactivados','usuarioNOKactivo','usuarioClaroChile'));
         }
     }
 

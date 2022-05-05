@@ -63,6 +63,7 @@ class ReporteAcreditacionController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $idUsuario = session('user_id');
         if($idUsuario ==  ""){
@@ -124,7 +125,7 @@ class ReporteAcreditacionController extends Controller
             
         }
   
-         return view('reporteAcreditacion.index',compact('datosUsuarios','EmpresasP','totalFolios','totalDocuementos','totalTrabajadores','totalEmpresasPriSSO','EmpresasP','usuarioAqua','certificacion','usuarioABBChile','usuarioNOKactivo')); 
+         return view('reporteAcreditacion.index',compact('datosUsuarios','EmpresasP','totalFolios','totalDocuementos','totalTrabajadores','totalEmpresasPriSSO','EmpresasP','usuarioAqua','certificacion','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
     }
 
     /**

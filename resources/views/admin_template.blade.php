@@ -299,7 +299,6 @@ desired effect
             </span>
           </a>
           <ul class="treeview-menu">
-          
             <li><a href="{{ route('cambiarCiclo.index') }}">Cambiar ciclos SSO</a></li>
             <li><a href="{{ route('habilitarFolio.index') }}">Habilitar Folio</a></li>
             <li><a href="{{ route('productividadCert.index') }}">Productividad Certificación</a></li>
@@ -338,7 +337,7 @@ desired effect
             <li><a href="{{ route('documentoReporte.index') }}">Estado de Documentos </a></li>
             
              <!--  <li><a href="{{ route('reporteAcreditacion.index') }}">Reporte Acreditación</a></li> -->
-            <li><a href="{{ route('reporteAquaAcreditado.index') }}">% de Acreditación global</br>por trabajador</a></li>
+            <li><a href="{{ route('reporteAquaAcreditado.index') }}">% de Acreditación total</br>por trabajador</a></li>
             <li><a href="{{ route('reporteTrabajadoresSsoAcre.index') }}">Reporte Trabajdores SSO</br>VS Certificación Laboral</a></li>
             <li><a href="{{ route('porcentajeCumplimientoSSO.index') }}">% Cumplimiento SSO</a></li>
             @if($usuarioAqua == 1 || $datosUsuarios->type == 1 || $datosUsuarios->type == 2 )
@@ -348,7 +347,9 @@ desired effect
             @if($usuarioABBChile == 1 || $datosUsuarios->type == 1 || $datosUsuarios->type == 2)
              <li><a href="{{ route('historialSso.index') }}">Folios Historicos</a></li>
             @endif
+             @if($usuarioClaroChile == 1 || $datosUsuarios->type == 1 || $datosUsuarios->type == 2)
              <li><a href="{{ route('reporteSSOClaro.index') }}">Reporte SSO acreditación</a></li>
+             @endif
           </ul>
         </li>
         @endif

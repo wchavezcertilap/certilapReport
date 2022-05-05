@@ -48,6 +48,7 @@ class DocumentoReporteController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $idUsuario = session('user_id');
         if($idUsuario ==  ""){
@@ -76,7 +77,7 @@ class DocumentoReporteController extends Controller
             }
 
 
-        return view('documentoReporte.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+        return view('documentoReporte.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
  
     }
 
@@ -101,6 +102,7 @@ class DocumentoReporteController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $idUsuario = session('user_id');
         if($idUsuario ==  ""){
@@ -1129,7 +1131,7 @@ class DocumentoReporteController extends Controller
             $listaCuerpo = 0;
             $activaLista = 0;
         }    
-            return view('documentoReporte.index',compact('listaCuerpo','totalDoc','totalDocRechazados','totalDocAprobados','totalDocVencidos','totalDocRevision','totalTB','totalDocAprobadosObs','EmpresasP','empresasPrincipales','datosUsuarios','certificacion','usuarioAqua','activaLista','usuarioABBChile','usuarioNOKactivo')); 
+            return view('documentoReporte.index',compact('listaCuerpo','totalDoc','totalDocRechazados','totalDocAprobados','totalDocVencidos','totalDocRevision','totalTB','totalDocAprobadosObs','EmpresasP','empresasPrincipales','datosUsuarios','certificacion','usuarioAqua','activaLista','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
       
     }
 

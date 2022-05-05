@@ -39,6 +39,7 @@ class CertificadoMasivoController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $periodosT = 0;
@@ -71,7 +72,7 @@ class CertificadoMasivoController extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valoresEstados = 0;
-        return view('CertificadoMasivo.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('CertificadoMasivo.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     
     }
 
@@ -100,6 +101,7 @@ class CertificadoMasivoController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -304,7 +306,7 @@ class CertificadoMasivoController extends Controller
                 $cantidaDatos = 0;
             }
             //echo $cantidaDatos;
-            return view('certificadoMasivo.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','datosVista','cantidaDatos','usuarioABBChile','periodos','usuarioNOKactivo'));
+            return view('certificadoMasivo.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','datosVista','cantidaDatos','usuarioABBChile','periodos','usuarioNOKactivo','usuarioClaroChile'));
            
         }
 

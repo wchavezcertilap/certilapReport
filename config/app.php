@@ -181,6 +181,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -195,6 +196,7 @@ return [
     */
 
     'aliases' => [
+
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -233,7 +235,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
-        'QuickChart' => Ianw\Quickchart\QuickChart::class
+        'QuickChart' => Ianw\Quickchart\QuickChart::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class
     ],
 
 ];

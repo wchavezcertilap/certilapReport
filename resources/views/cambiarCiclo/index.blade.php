@@ -69,6 +69,16 @@
                    <div class="col-sm-2">
                         <input type="number" min="1" class="form-control" name="diasCarga" id="diasCarga" placeholder="Dias de Carga">
                   </div>
+
+
+                </div>
+                <div class="box-body">
+                  <div class="form-group">
+                   <label for="empresaSub" class="col-sm-2 control-label">Proyecto</label>
+                     <div class="col-sm-2">
+                          <input type="text" class="form-control" placeholder="proyecto" name="proyecto" id="proyecto">
+                    </div>
+                  </div>
                 </div>
               </div> 
 

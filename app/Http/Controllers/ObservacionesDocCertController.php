@@ -71,6 +71,7 @@ class ObservacionesDocCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -99,7 +100,7 @@ class ObservacionesDocCertController extends Controller
             }
         
 
-         return view('observaciones.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentos'));
+         return view('observaciones.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentos','usuarioClaroChile'));
         }
     }
 
@@ -128,6 +129,7 @@ class ObservacionesDocCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -146,7 +148,7 @@ class ObservacionesDocCertController extends Controller
                 ]);
 
         $observaciones=DocumentoObser::where('idDoc','=',$idDoc)->orderBy('observacion', 'ASC')->get(['id','observacion','trabajador','status'])->toArray(); 
-
+        $cantObser = count($observaciones);
 
         $documento =DocumentoCertificacion::where('id','=',$idDoc)->orderBy('name', 'ASC')->get(['id','name','type','mainCompanyRut'])->toArray();
         if(!empty($documento[0]['mainCompanyRut'])){
@@ -159,9 +161,9 @@ class ObservacionesDocCertController extends Controller
         $idDoc =$documento[0]['id'] ;
         if(!empty($observaciones)){
 
-            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc'));
+            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc','usuarioClaroChile','cantObser'));
         }else{
-            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentoTex','idDoc')); 
+            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentoTex','idDoc','usuarioClaroChile')); 
         }
     }
 
@@ -192,12 +194,14 @@ class ObservacionesDocCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
         $UsuarioPrincipal->load('usuarioDatos');
 
         $observaciones=DocumentoObser::where('idDoc','=',$id)->orderBy('observacion', 'ASC')->get(['id','observacion','trabajador','status'])->toArray(); 
+        $cantObser = count($observaciones);
         $documento =DocumentoCertificacion::where('id','=',$id)->orderBy('name', 'ASC')->get(['id','name','type','mainCompanyRut'])->toArray();
         if(!empty($documento[0]['mainCompanyRut'])){
             $empresaPrincipal = empresaPrincipal::where('rut',$documento[0]['mainCompanyRut'])->orderBy('name', 'ASC')->take(1)->get(['name'])->toArray();
@@ -208,11 +212,11 @@ class ObservacionesDocCertController extends Controller
        
         $idDoc =$documento[0]['id'] ;
         if(!empty($observaciones)){
-            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc'));
+            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc','usuarioClaroChile','cantObser'));
            
         }else{
 
-            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentoTex','idDoc'));
+            return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','documentoTex','idDoc','usuarioClaroChile'));
          
         }
     }
@@ -238,6 +242,7 @@ class ObservacionesDocCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -256,7 +261,8 @@ class ObservacionesDocCertController extends Controller
 
         $observacion=DocumentoObser::where('id','=',$idObserEdit)->orderBy('observacion', 'ASC')->get(['id','observacion','trabajador','idDoc'])->toArray(); 
         $idDoc =$observacion[0]['idDoc'] ;
-        $observaciones=DocumentoObser::where('idDoc','=',$idDoc)->orderBy('observacion', 'ASC')->get(['id','observacion','trabajador','status'])->toArray(); 
+        $observaciones=DocumentoObser::where('idDoc','=',$idDoc)->orderBy('observacion', 'ASC')->get(['id','observacion','trabajador','status'])->toArray();
+        $cantObser = count($observaciones); 
         $documento =DocumentoCertificacion::where('id','=',$idDoc)->orderBy('name', 'ASC')->get(['id','name','type','mainCompanyRut'])->toArray();
         if(!empty($documento[0]['mainCompanyRut'])){
             $empresaPrincipal = empresaPrincipal::where('rut',$documento[0]['mainCompanyRut'])->orderBy('name', 'ASC')->take(1)->get(['name'])->toArray();
@@ -266,7 +272,7 @@ class ObservacionesDocCertController extends Controller
         }
        
 
-        return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc'));
+        return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc','usuarioClaroChile','cantObser'));
         
     }
 
@@ -285,6 +291,7 @@ class ObservacionesDocCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -302,7 +309,7 @@ class ObservacionesDocCertController extends Controller
         }
        
         DocumentoObser::destroy($id);
-        return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc'));
+        return view('observaciones.addObser',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','observaciones','documentoTex','idDoc','usuarioClaroChile'));
 
     }
 }

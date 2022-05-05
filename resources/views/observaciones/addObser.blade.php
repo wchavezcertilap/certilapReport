@@ -219,7 +219,7 @@ $(function () {
  
 
   var table = $('table.display').DataTable({    
-          pageLength: 30,    
+        pageLength: {{ $cantObser }},      
         language: {
                 "lengthMenu": "Mostrar _MENU_ registros",
                 "zeroRecords": "No se encontraron resultados",
