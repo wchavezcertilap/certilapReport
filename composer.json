@@ -20,7 +20,7 @@
         "laraveles/spanish": "^1.2",
         "lcobucci/jwt": "3.3.3",
         "maatwebsite/excel": "^2.1",
-        "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3",
+        "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
