@@ -98,6 +98,7 @@
                   <th>Nombre</th>
                   <th>Apellido</th>
                   <th>Porcentaje</th>
+                  <th>Ciclo</th>
                   @if($estado == 1)
                   <th>Estado</th>
                   @endif
@@ -140,9 +141,9 @@
                  <td>
                    {{$work["porcentajeTrabajador"]}}
                  </td>
+                  <td>
                     @isset($work["estado"])
                     <td>
-                      {{$work["estado"]}}
                     </td>
                    @endisset
                 </tr> 
@@ -270,7 +271,7 @@ $(function () {
         text:      '<i class="fa fa-fw fa-file-excel-o"></i> ',
         titleAttr: 'Exportar a Excel',
         className: 'btn btn-success',
-         title: 'Reporte % Acreditiacion Global por Trabajador',   
+         title: 'Reporte % Acreditiacion total por Trabajador',   
         filename:  'Reporte_porcentaje_acreditacion_global_trabajadores'
       },
       {
@@ -280,7 +281,7 @@ $(function () {
         className: 'btn btn-danger',
         orientation: 'landscape',
         pageSize: 'LEGAL',
-        title: 'Reporte % Acreditiacion Global por Trabajador',   
+        title: 'Reporte % Acreditiacion total por Trabajador',   
         filename:  'Reporte_porcentaje_acreditacion_global_trabajadores'
       },
       {
@@ -288,7 +289,7 @@ $(function () {
         text:      '<i class="fa fa-print"></i> ',
         titleAttr: 'Imprimir',
         className: 'btn btn-info',
-        title: 'Reporte % Acreditiacion Global por Trabajador',   
+        title: 'Reporte % Acreditiacion total por Trabajador',   
         filename:  'Reporte_porcentaje_acreditacion_global_trabajadores'
       },
     ]         

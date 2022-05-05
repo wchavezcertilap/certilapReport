@@ -44,6 +44,7 @@
                   <th>RUT Sub Contratista</th>
                   <th>Sub Contratista</th>
                   <th>Proyecto</th>
+                  <th>Correo</th>
                 </tr>
                 </thead>
                  <tbody>
@@ -73,6 +74,9 @@
                  </td>
                   <td>
                    {{$datos["proyecto"]}}
+                 </td>
+                 <td>
+                   {{$datos["correo"]}}
                  </td>
                 </tr> 
                 @endisset

@@ -31,6 +31,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -55,14 +56,14 @@ class ReporteTrabajadoresSsoAcre extends Controller
 
             $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo')); 
+            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
         }
         if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
 
             $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo')); 
+            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
         }
     }
@@ -88,6 +89,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -591,7 +593,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         } 
      
         $lista=0;
-        return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','lista','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','lista','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
 
     }
 

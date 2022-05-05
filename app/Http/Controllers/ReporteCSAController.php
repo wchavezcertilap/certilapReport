@@ -38,6 +38,7 @@ class ReporteCSAController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $periodosT = 0;
         $principalesTexto = "";
@@ -69,7 +70,7 @@ class ReporteCSAController extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valoresEstados = 0;
-        return view('reporteTraCSA.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteTraCSA.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**
@@ -97,6 +98,7 @@ class ReporteCSAController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -186,11 +188,21 @@ class ReporteCSAController extends Controller
             $peridoInicio = $input["peridoInicio"];
             $periodosIT = Periodo::where('id', $peridoInicio)->get(['id', 'monthId','year']);
             $periodosIT->load('mes')->toArray();
-            $fechaInicial = $periodosIT[0]['year'].'-0'.$periodosIT[0]['monthId'].'-01 00:01:00'; 
+            if($periodosIT[0]['monthId']>9){
+                $MESI=$periodosIT[0]['monthId'];
+            }else{
+                $MESI='0'.$periodosIT[0]['monthId'];
+            }
+            $fechaInicial = $periodosIT[0]['year'].'-'.$MESI.'-01'; 
             $peridoFinal = $input["peridoFinal"];
             $periodosFT = Periodo::where('id', $peridoFinal)->get(['id', 'monthId','year']);
             $periodosFT->load('mes')->toArray();
-            $fechaFinal = $periodosIT[0]['year'].'-0'.($periodosIT[0]['monthId']+1).'-01 00:00:00'; 
+            if($periodosIT[0]['monthId']>9){
+                $MESF=$periodosFT[0]['monthId'];
+            }else{
+                $MESF='0'.$periodosFT[0]['monthId'];
+            }
+            $fechaFinal = $periodosFT[0]['year'].'-'.$MESF.'-31'; 
             $periodosFT= $periodosFT[0]['mes'][0]['name'];
             $periodosIT= $periodosIT[0]['mes'][0]['name'];
             $periodosT =  $periodosIT ."-".$periodosFT ; 
@@ -205,7 +217,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -218,7 +231,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -308,7 +322,9 @@ class ReporteCSAController extends Controller
                         if(!empty($empresasContratista)){
 
                             foreach ($empresasContratista as $contratista) {
-               
+                                unset($Datoscertificacion);
+                                unset($datosAcceso);
+                                unset($documentosTrabObligatorios);
                                 if($contratista->companyTypeId == 1){
                                     $rutContratista = $contratista->rutComp."-".$contratista->dvComp; 
                                     $nombreContratista = ucwords(mb_strtolower($contratista->nameComp,'UTF-8')); 
@@ -352,10 +368,11 @@ class ReporteCSAController extends Controller
                                 ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                 ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                 ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                 ->take(1)
-                                ->orderBy('ACC_ID', 'DESC')
-                                ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
+                                ->orderBy('ACC_FECHA_ACCESO', 'DESC')
+                                ->get(['ACC_FECHA_ACCESO'])->toArray();
                                 if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                     $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
                                 }else{
@@ -372,7 +389,7 @@ class ReporteCSAController extends Controller
                                 })
                                 ->where('worker_status','1')
                                 ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                 ->take(1)->toArray();
                                 $totalDocRechazados = 0;
                                 $totalDocAprobados = 0;
@@ -390,6 +407,14 @@ class ReporteCSAController extends Controller
                                     
                                     $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
+
+                                    $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
 
                                     $totalDoc = count($documentos);
                                     if(!empty($documentos[0]['id'])){ 
@@ -416,7 +441,8 @@ class ReporteCSAController extends Controller
                                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                 
+                                        $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                         if($porcentajeApro>=100){
                                             $cantidadcien +=1; 
                                         }else{
@@ -440,10 +466,18 @@ class ReporteCSAController extends Controller
                                     })
                                     ->where('worker_status','1')
                                     ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
                                    
                                     if(!empty($empleadoSSOD[0]->id)){
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                         $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -474,7 +508,7 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{
@@ -652,7 +686,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -664,7 +699,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -747,7 +783,9 @@ class ReporteCSAController extends Controller
                             return number_format($rut, 0, ",", "") . '-' . $dv;
                         }
                     foreach((array)$query as $empresasContratista){
-
+                        unset($Datoscertificacion);
+                        unset($datosAcceso);
+                        unset($documentosTrabObligatorios);
                         if(!empty($empresasContratista)){
 
                             foreach ($empresasContratista as $contratista) {
@@ -795,10 +833,11 @@ class ReporteCSAController extends Controller
                                 ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                 ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                 ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                 ->take(1)
-                                ->orderBy('ACC_ID', 'DESC')
-                                ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
+                                ->orderBy('ACC_FECHA_ACCESO', 'DESC')
+                                ->get(['ACC_FECHA_ACCESO'])->toArray();
                                
                                 if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                     $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
@@ -817,7 +856,7 @@ class ReporteCSAController extends Controller
                                 })
                                 ->where('worker_status','1')
                                 ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                 ->take(1)->toArray();
                                 $totalDocRechazados = 0;
                                 $totalDocAprobados = 0;
@@ -835,6 +874,14 @@ class ReporteCSAController extends Controller
                                     
                                     $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
+
+                                    $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
 
                                     $totalDoc = count($documentos);
                                     if(!empty($documentos[0]['id'])){ 
@@ -861,7 +908,7 @@ class ReporteCSAController extends Controller
                                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                        $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                         if($porcentajeApro>=100){
                                             $cantidadcien +=1; 
                                         }else{
@@ -885,14 +932,22 @@ class ReporteCSAController extends Controller
                                     })
                                     ->where('worker_status','1')
                                     ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
                                    
                                     if(!empty($empleadoSSOD[0]->id)){
                                     
                                         $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
-                                        
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
+                                    
                                         $totalDoc = count($documentos);
                                        
                                         if(!empty($documentos[0]['id'])){ 
@@ -919,7 +974,7 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{
@@ -1091,7 +1146,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereBetween('Company.periodId', [$peridoInicio,$peridoFinal])
@@ -1105,7 +1161,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereBetween('Company.periodId', [$peridoInicio,$peridoFinal])
@@ -1189,7 +1246,9 @@ class ReporteCSAController extends Controller
                         }
 
                         foreach((array)$query as $empresasContratista){                            
-
+                            unset($Datoscertificacion);
+                            unset($datosAcceso);
+                            unset($documentosTrabObligatorios);
                             if(!empty($empresasContratista)){
 
                                 foreach ($empresasContratista as $contratista) {
@@ -1230,15 +1289,16 @@ class ReporteCSAController extends Controller
                                     $Datoscertificacion['perido'] = ucwords(mb_strtolower($peridoTex,'UTF-8'));   
                                     $Datoscertificacion['estadoCertificacion'] = ucwords(mb_strtolower($estadoCerficacionTexto,'UTF-8')); 
                                     $Datoscertificacion['fechaCertificado'] =  $fechaCertificiacion;
-                        
+                                   
                                     $datosAcceso =AccesoPersona::where('ACC_RUT',$contratista->rut)
                                     ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                     ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                     ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                    ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                    ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                    ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                     ->take(1)
-                                    ->orderBy('ACC_ID', 'DESC')
-                                    ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
+                                    ->orderBy('ACC_FECHA_ACCESO', 'desc')
+                                    ->get(['ACC_FECHA_ACCESO'])->toArray();
                                     if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                         $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
                                     }else{
@@ -1246,92 +1306,43 @@ class ReporteCSAController extends Controller
                                     } 
                                     
                                     $EP = $contratista->mainCompanyRut;
-                                $empleadoSSO = DB::table('xt_ssov2_header_worker')
-                                ->join('xt_ssov2_header', function ($join) use ($EP,$rutContratistasinDV){
-                                    $join->where('xt_ssov2_header.sso_mcomp_rut','=',$EP)
-                                         ->where('xt_ssov2_header.sso_comp_rut','=',$rutContratistasinDV)
-                                         ->on('xt_ssov2_header.id','=','xt_ssov2_header_worker.sso_id');
-                                })
-                                ->where('worker_status','1')
-                                ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
-                                ->take(1)->toArray();
-                                $totalDocRechazados = 0;
-                                $totalDocAprobados = 0;
-                                $totalDocVencidos = 0;
-                                $totalDocRevision = 0;
-                                $porcentajeApro = 0; 
-                                $cantidadRechazados = 0;
-                                $cantidadAprobados = 0;
-                                $cantidadVencidos = 0;
-                                $cantidadPorRevision = 0; 
-                                $cantidadcien = 0;
-                                $noAcreditado = 0; 
-                                $totalDoc = 0;
-                                if(!empty($empleadoSSO[0]->id)){
-                                    
-                                    $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
-                                        get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
-
-                                    $totalDoc = count($documentos);
-                                    if(!empty($documentos[0]['id'])){ 
-
-                                        foreach ($documentos as  $doc) {
-
-                                            $fecha_actual = strtotime(date("d-m-Y H:i:00",time()));
-                                            //echo $fecha_actual;
-                                            $fecha2 = $doc["upld_vence_date"];
-                                            $fechaUpdate = $doc["upld_upddat"];  
-
-                                            if ($doc["upld_rechazado"] == 1) {
-                                                $cantidadRechazados +=1; 
-                                            }elseif (($doc["upld_docaprob"] == 1 or $fecha_actual <= $fechaUpdate) and $fecha_actual < $fecha2){
-                                                $cantidadAprobados +=1; 
-                                            }elseif (($doc["upld_venced"]== 1  or $fecha_actual > $fecha2)and $doc["upld_rechazado"] == 0 and $fecha2!= 0){
-                                                $cantidadVencidos +=1; 
-                                            }elseif ($doc["id"] != "" and $doc["upld_docaprob"] == 0 and $doc["upld_docaprob_uid"] == 0){
-                                                $cantidadPorRevision +=1; 
-                                            }
-                                        }
-
-                                        $totalDocRechazados = $totalDocRechazados + $cantidadRechazados;
-                                        $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
-                                        $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
-                                        $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
-                                        if($porcentajeApro>=100){
-                                            $cantidadcien +=1; 
-                                        }else{
-                                            $noAcreditado +=1;
-                                        }
-                                       
-                                        $Datoscertificacion["porcentajeTrabajador"] =  number_format($porcentajeApro, 2, '.', '');
-                                    }else{
-                                        $Datoscertificacion["porcentajeTrabajador"] =  0;
-                                    }
-
-                                }else{
-                                    
-                                    $rutTrabajadorD = number_format($contratista->rut, 0, "", ".") . '-' .$contratista->dv;
-                               
-                                    $empleadoSSOD =  DB::table('xt_ssov2_header_worker')
+                                    $empleadoSSO = DB::table('xt_ssov2_header_worker')
                                     ->join('xt_ssov2_header', function ($join) use ($EP,$rutContratistasinDV){
                                         $join->where('xt_ssov2_header.sso_mcomp_rut','=',$EP)
                                              ->where('xt_ssov2_header.sso_comp_rut','=',$rutContratistasinDV)
                                              ->on('xt_ssov2_header.id','=','xt_ssov2_header_worker.sso_id');
                                     })
                                     ->where('worker_status','1')
-                                    ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->where('worker_rut',$rutTrabajadorCert)
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
-                                   
-                                    if(!empty($empleadoSSOD[0]->id)){
-                                    
-                                        $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
-                                        get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
-                                        
-                                        $totalDoc = count($documentos);
+                                    $totalDocRechazados = 0;
+                                    $totalDocAprobados = 0;
+                                    $totalDocVencidos = 0;
+                                    $totalDocRevision = 0;
+                                    $porcentajeApro = 0; 
+                                    $cantidadRechazados = 0;
+                                    $cantidadAprobados = 0;
+                                    $cantidadVencidos = 0;
+                                    $cantidadPorRevision = 0; 
+                                    $cantidadcien = 0;
+                                    $noAcreditado = 0; 
+                                    $totalDoc = 0;
+                                    if(!empty($empleadoSSO[0]->id)){
                                        
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
+                                    
+                                        $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
+                                        get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
+
+                                        $totalDoc = count($documentos);
                                         if(!empty($documentos[0]['id'])){ 
 
                                             foreach ($documentos as  $doc) {
@@ -1356,22 +1367,91 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{
                                                 $noAcreditado +=1;
                                             }
-
+                                       
                                             $Datoscertificacion["porcentajeTrabajador"] =  number_format($porcentajeApro, 2, '.', '');
                                         }else{
                                             $Datoscertificacion["porcentajeTrabajador"] =  0;
                                         }
                                     }else{
-                                        $Datoscertificacion["porcentajeTrabajador"] = "";
+                                    
+                                        $rutTrabajadorD = number_format($contratista->rut, 0, "", ".") . '-' .$contratista->dv;
+                               
+                                        $empleadoSSOD =  DB::table('xt_ssov2_header_worker')
+                                        ->join('xt_ssov2_header', function ($join) use ($EP,$rutContratistasinDV){
+                                            $join->where('xt_ssov2_header.sso_mcomp_rut','=',$EP)
+                                                 ->where('xt_ssov2_header.sso_comp_rut','=',$rutContratistasinDV)
+                                                 ->on('xt_ssov2_header.id','=','xt_ssov2_header_worker.sso_id');
+                                        })
+                                        ->where('worker_status','1')
+                                        ->where('worker_rut',$rutTrabajadorD)
+                                        ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
+                                        ->take(1)->toArray();
 
+                                       
+                                   
+                                        if(!empty($empleadoSSOD[0]->id)){
+
+                                            $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                            ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                            ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                            ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                            ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                            ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                            ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
+                                    
+                                        
+                                            $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
+                                            get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
+                                            
+                                            $totalDoc = count($documentos);
+                                           
+                                            if(!empty($documentos[0]['id'])){ 
+
+                                                foreach ($documentos as  $doc) {
+
+                                                    $fecha_actual = strtotime(date("d-m-Y H:i:00",time()));
+                                                    //echo $fecha_actual;
+                                                    $fecha2 = $doc["upld_vence_date"];
+                                                    $fechaUpdate = $doc["upld_upddat"];  
+
+                                                    if ($doc["upld_rechazado"] == 1) {
+                                                        $cantidadRechazados +=1; 
+                                                    }elseif (($doc["upld_docaprob"] == 1 or $fecha_actual <= $fechaUpdate) and $fecha_actual < $fecha2){
+                                                        $cantidadAprobados +=1; 
+                                                    }elseif (($doc["upld_venced"]== 1  or $fecha_actual > $fecha2)and $doc["upld_rechazado"] == 0 and $fecha2!= 0){
+                                                        $cantidadVencidos +=1; 
+                                                    }elseif ($doc["id"] != "" and $doc["upld_docaprob"] == 0 and $doc["upld_docaprob_uid"] == 0){
+                                                        $cantidadPorRevision +=1; 
+                                                    }
+                                                }
+
+                                                $totalDocRechazados = $totalDocRechazados + $cantidadRechazados;
+                                                $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
+                                                $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
+                                                $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
+                                                 
+                                                $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
+                                                if($porcentajeApro>=100){
+                                                    $cantidadcien +=1; 
+                                                }else{
+                                                    $noAcreditado +=1;
+                                                }
+
+                                                $Datoscertificacion["porcentajeTrabajador"] =  number_format($porcentajeApro, 2, '.', '');
+                                            }else{
+                                                $Datoscertificacion["porcentajeTrabajador"] =  0;
+                                            }
+                                        }else{
+                                            $Datoscertificacion["porcentajeTrabajador"] = "";
+
+                                        }
                                     }
-                                }
                                     ///llenamos lista de datos ////
                                     $WORKCER2[] = $Datoscertificacion;
                                 }
@@ -1523,10 +1603,9 @@ class ReporteCSAController extends Controller
                             $sheet->loadView('reporteTraCSA.excel',compact('WORKS'));
                         });
                     })->export('xls'); 
-                }         
+                }
             }
         }
-
         if($tipoBsuqueda == 2){
 
             $fechaSeleccion = $input["fechaSeleccion"];
@@ -1539,10 +1618,8 @@ class ReporteCSAController extends Controller
                 $fecha1 = $fechas[0];
                 $fecha2 = $fechas[1];
                 
-                $fechaInicialP = date("Y-m-d", strtotime($fecha1));
-                $fechaFinalP = date("Y-m-d", strtotime($fecha2));
-                $fechaInicial=$fechaInicialP.' 00:01:00';
-                $fechaFinal=$fechaFinalP.' 00:00:00';
+                $fechaInicial = date("Y-m-d", strtotime($fecha1));
+                $fechaFinal = date("Y-m-d", strtotime($fecha2));
 
                 $periodosT = $fecha1 ."-".$fecha2;
                 $fechasDesde = strtotime ( '+4 hour' ,strtotime($fecha1));
@@ -1553,7 +1630,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -1566,7 +1644,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -1654,7 +1733,9 @@ class ReporteCSAController extends Controller
                     foreach((array)$query as $empresasContratista){
 
                         if(!empty($empresasContratista)){
-
+                            unset($Datoscertificacion);
+                            unset($datosAcceso);
+                            unset($documentosTrabObligatorios);
                             foreach ($empresasContratista as $contratista) {
                
                                 if($contratista->companyTypeId == 1){
@@ -1700,9 +1781,10 @@ class ReporteCSAController extends Controller
                                 ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                 ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                 ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                 ->take(1)
-                                ->orderBy('ACC_ID', 'DESC')
+                                ->orderBy('ACC_FECHA_ACCESO', 'DESC')
                                 ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
                                 if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                     $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
@@ -1720,7 +1802,7 @@ class ReporteCSAController extends Controller
                                 })
                                 ->where('worker_status','1')
                                 ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                 ->take(1)->toArray();
                                 $totalDocRechazados = 0;
                                 $totalDocAprobados = 0;
@@ -1735,6 +1817,14 @@ class ReporteCSAController extends Controller
                                 $noAcreditado = 0; 
                                 $totalDoc = 0;
                                 if(!empty($empleadoSSO[0]->id)){
+
+                                    $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                     $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -1764,7 +1854,7 @@ class ReporteCSAController extends Controller
                                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                        $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                         if($porcentajeApro>=100){
                                             $cantidadcien +=1; 
                                         }else{
@@ -1788,10 +1878,18 @@ class ReporteCSAController extends Controller
                                     })
                                     ->where('worker_status','1')
                                     ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
                                    
                                     if(!empty($empleadoSSOD[0]->id)){
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                         $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -1822,7 +1920,7 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{
@@ -1997,10 +2095,8 @@ class ReporteCSAController extends Controller
                 $fechas = $porciones = explode("_", $fechaSeleccion);
                 $fecha1 = $fechas[0];
                 $fecha2 = $fechas[1];
-                $fechaInicialP = date("Y-m-d", strtotime($fecha1));
-                $fechaFinalP = date("Y-m-d", strtotime($fecha2));
-                $fechaInicial=$fechaInicialP.' 00:01:00';
-                $fechaFinal=$fechaFinalP.' 00:00:00';
+                $fechaInicial = date("Y-m-d", strtotime($fecha1));
+                $fechaFinal = date("Y-m-d", strtotime($fecha2));
                 $periodosT = $fecha1 ."-".$fecha2;
                 $fechasDesde = strtotime ( '+4 hour' ,strtotime($fecha1));
                 //sumo 1 día
@@ -2010,7 +2106,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -2022,7 +2119,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereIn('Company.rut',$rutcontratistasR)
@@ -2109,7 +2207,9 @@ class ReporteCSAController extends Controller
                     foreach((array)$query as $empresasContratista){
 
                         if(!empty($empresasContratista)){
-
+                            unset($Datoscertificacion);
+                            unset($datosAcceso);
+                            unset($documentosTrabObligatorios);
                             foreach ($empresasContratista as $contratista) {
                
                                 if($contratista->companyTypeId == 1){
@@ -2155,10 +2255,11 @@ class ReporteCSAController extends Controller
                                 ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                 ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                 ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                 ->take(1)
-                                ->orderBy('ACC_ID', 'DESC')
-                                ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
+                                ->orderBy('ACC_FECHA_ACCESO', 'DESC')
+                                ->get(['ACC_FECHA_ACCESO'])->toArray();
                                 if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                     $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
                                 }else{
@@ -2175,7 +2276,7 @@ class ReporteCSAController extends Controller
                                 })
                                 ->where('worker_status','1')
                                 ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                 ->take(1)->toArray();
                                 $totalDocRechazados = 0;
                                 $totalDocAprobados = 0;
@@ -2190,6 +2291,14 @@ class ReporteCSAController extends Controller
                                 $noAcreditado = 0; 
                                 $totalDoc = 0;
                                 if(!empty($empleadoSSO[0]->id)){
+
+                                    $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                    ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                    ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                    ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                    ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                    ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                     $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -2219,7 +2328,7 @@ class ReporteCSAController extends Controller
                                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                        $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                         if($porcentajeApro>=100){
                                             $cantidadcien +=1; 
                                         }else{
@@ -2243,10 +2352,18 @@ class ReporteCSAController extends Controller
                                     })
                                     ->where('worker_status','1')
                                     ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
                                    
                                     if(!empty($empleadoSSOD[0]->id)){
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                         $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -2277,7 +2394,7 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{
@@ -2452,10 +2569,8 @@ class ReporteCSAController extends Controller
                 $fechas = $porciones = explode("_", $fechaSeleccion);
                 $fecha1 = $fechas[0];
                 $fecha2 = $fechas[1];
-                $fechaInicialP = date("Y-m-d", strtotime($fecha1));
-                $fechaFinalP = date("Y-m-d", strtotime($fecha2));
-                $fechaInicial=$fechaInicialP.' 00:01:00';
-                $fechaFinal=$fechaFinalP.' 00:00:00';
+                $fechaInicial = date("Y-m-d", strtotime($fecha1));
+                $fechaFinal = date("Y-m-d", strtotime($fecha2));
                 
                 $periodosT = $fecha1 ."-".$fecha2;
                 $fechasDesde = strtotime ( '+4 hour' ,strtotime($fecha1));
@@ -2466,7 +2581,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereBetween('Company.certificateDate', [$fechasDesde,$fechasHasta])
@@ -2477,7 +2593,8 @@ class ReporteCSAController extends Controller
                 ->join('Worker', function ($join) use ($value){
                     $join->on('Worker.mainCompanyRut','=','Company.mainCompanyRut')
                         ->on('Worker.companyRut','=','Company.rut')
-                        ->on('Worker.periodId','=','Company.periodId');
+                        ->on('Worker.periodId','=','Company.periodId')
+                        ->on('Worker.CompanyCenter','=','Company.center');
                 })
                 ->whereIn('Company.mainCompanyRut',$rutprincipalR)
                 ->whereBetween('Company.certificateDate', [$fechasDesde,$fechasHasta])
@@ -2563,7 +2680,9 @@ class ReporteCSAController extends Controller
                     foreach((array)$query as $empresasContratista){
 
                         if(!empty($empresasContratista)){
-
+                            unset($Datoscertificacion);
+                            unset($datosAcceso);
+                            unset($documentosTrabObligatorios);
                             foreach ($empresasContratista as $contratista) {
                
                                 if($contratista->companyTypeId == 1){
@@ -2606,10 +2725,11 @@ class ReporteCSAController extends Controller
                                 ->where('ACC_RUT_CONTRATISTA',$rutContratistasinDV)
                                 ->where('ACC_RUT_PPAL',$contratista->mainCompanyRut)
                                 ->where('ACC_CENTRO_COSTO',$contratista->center)
-                                ->whereBetween('ACC_FECHA_ACCESO', array($fechaInicial,$fechaFinal))
+                                ->whereDate('ACC_FECHA_ACCESO', '>=', $fechaInicial)
+                                ->whereDate('ACC_FECHA_ACCESO', '<=', $fechaFinal)
                                 ->take(1)
-                                ->orderBy('ACC_ID', 'DESC')
-                                ->get(['ACC_FECHA_ACCESO','ACC_ID'])->toArray();
+                                ->orderBy('ACC_FECHA_ACCESO', 'DESC')
+                                ->get(['ACC_FECHA_ACCESO'])->toArray();
                                 if(!empty($datosAcceso[0]['ACC_FECHA_ACCESO'])){
                                     $Datoscertificacion['ControlAcceso'] =  $datosAcceso[0]['ACC_FECHA_ACCESO'];
                                 }else{
@@ -2625,7 +2745,7 @@ class ReporteCSAController extends Controller
                                 })
                                 ->where('worker_status','1')
                                 ->where('worker_rut',$rutTrabajadorCert)
-                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                 ->take(1)->toArray();
                                 $totalDocRechazados = 0;
                                 $totalDocAprobados = 0;
@@ -2640,6 +2760,14 @@ class ReporteCSAController extends Controller
                                 $noAcreditado = 0; 
                                 $totalDoc = 0;
                                 if(!empty($empleadoSSO[0]->id)){
+
+                                    $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSO[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSO[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                     $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSO[0]->sso_id)->where('upld_workerid',$empleadoSSO[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -2669,7 +2797,7 @@ class ReporteCSAController extends Controller
                                         $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                         $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                         $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                        $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                        $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                         if($porcentajeApro>=100){
                                             $cantidadcien +=1; 
                                         }else{
@@ -2693,10 +2821,18 @@ class ReporteCSAController extends Controller
                                     })
                                     ->where('worker_status','1')
                                     ->where('worker_rut',$rutTrabajadorD)
-                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','xt_ssov2_header_worker.sso_id'])
+                                    ->get(['xt_ssov2_header_worker.id','worker_name','worker_name1','worker_name2','worker_name3','worker_rut','worker_cargoid','xt_ssov2_header_worker.sso_id','xt_ssov2_header.sso_cfgid'])
                                     ->take(1)->toArray();
                                    
                                     if(!empty($empleadoSSOD[0]->id)){
+
+                                        $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $empleadoSSOD[0]->sso_cfgid])
+                                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cargo_id' => $empleadoSSOD[0]->worker_cargoid])
+                                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->count();
                                     
                                         $documentos = EstadoDocumento::where('upld_sso_id', $empleadoSSOD[0]->sso_id)->where('upld_workerid',$empleadoSSOD[0]->id)->where('upld_status',1)->where('upld_type',1)->
                                         get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -2727,7 +2863,7 @@ class ReporteCSAController extends Controller
                                             $totalDocAprobados = $cantidadAprobados + $totalDocAprobados; 
                                             $totalDocVencidos = $totalDocVencidos + $cantidadVencidos;
                                             $totalDocRevision = $totalDocRevision + $cantidadPorRevision; 
-                                            $porcentajeApro = ($totalDocAprobados * 100)/($totalDoc);
+                                            $porcentajeApro = ($totalDocAprobados / $documentosTrabObligatorios * 100);
                                             if($porcentajeApro>=100){
                                                 $cantidadcien +=1; 
                                             }else{

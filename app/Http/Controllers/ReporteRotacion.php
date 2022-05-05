@@ -73,6 +73,7 @@ class ReporteRotacion extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -98,7 +99,7 @@ class ReporteRotacion extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valores = 0;
-        return view('reporteRotacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteRotacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**
@@ -116,6 +117,7 @@ class ReporteRotacion extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -448,7 +450,7 @@ class ReporteRotacion extends Controller
         
         $etiquetasEstados = array("Cantidad Ingresado","Cantidad Desvinculados");
         $valores = array($cuentaIngresados,$cuentaEresados);
-        return view('reporteRotacion.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','listaEgresado','listaIngresados','etiquetasEstados','valores','cuentaIngresados','cuentaEresados','countContratistaR','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteRotacion.index',compact('EmpresasP','periodos','datosUsuarios','certificacion','listaEgresado','listaIngresados','etiquetasEstados','valores','cuentaIngresados','cuentaEresados','countContratistaR','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
 
 
     }

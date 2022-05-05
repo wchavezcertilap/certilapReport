@@ -30,6 +30,7 @@ class PorcentajeCumplimientoSSOController extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -51,14 +52,14 @@ class PorcentajeCumplimientoSSOController extends Controller
 
                 $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
             if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
 
                 $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -84,6 +85,7 @@ class PorcentajeCumplimientoSSOController extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -229,10 +231,12 @@ class PorcentajeCumplimientoSSOController extends Controller
                     if(!empty($idDocTrab)){
                         
                         $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
-                        ->where(['cfg_id' => $folio['sso_cfgid']])
-                        ->whereIn('cargo_id', $idDocTrab )
-                        ->distinct('doc_id')
-                        ->get(['doc_id'])->toArray();
+                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $folio['sso_cfgid']])
+                        ->whereIn('xt_ssov2_configs_cargos_cats_docs_params.cargo_id', $idDocTrab )
+                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->toArray();
                         unset($docIdTrab);
                         foreach ($documentosTrabObligatorios as  $doctrabObl){
 
@@ -650,7 +654,7 @@ class PorcentajeCumplimientoSSOController extends Controller
                 })->export('xlsx');
             }else{
                 $WORK = 0;
-                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','WORK','usuarioNOKactivo')); 
+                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','WORK','usuarioNOKactivo','usuarioClaroChile')); 
             }
         }else{
 
@@ -672,11 +676,13 @@ class PorcentajeCumplimientoSSOController extends Controller
 
                 if(!empty($idDocTrab)){
 
-                $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
-                ->where(['cfg_id' => $idFolios[0]['sso_cfgid']])
-                ->whereIn('cargo_id', $idDocTrab )
-                ->distinct('doc_id')
-                ->get(['doc_id'])->toArray();
+                 $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
+                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $folio['sso_cfgid']])
+                        ->whereIn('xt_ssov2_configs_cargos_cats_docs_params.cargo_id', $idDocTrab )
+                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->toArray();
                     unset($docIdTrab);
                     foreach ($documentosTrabObligatorios as  $doctrabObl) {
 
@@ -741,10 +747,12 @@ class PorcentajeCumplimientoSSOController extends Controller
                     if(!empty($idDocTrab)){
                         
                         $documentosTrabObligatorios = DB::table('xt_ssov2_configs_cargos_cats_docs_params')
-                        ->where(['cfg_id' => $folio['sso_cfgid']])
-                        ->whereIn('cargo_id', $idDocTrab )
-                        ->distinct('doc_id')
-                        ->get(['doc_id'])->toArray();
+                        ->join('xt_ssov2_doctypes', 'xt_ssov2_doctypes.id', '=', 'xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->where(['xt_ssov2_configs_cargos_cats_docs_params.cfg_id' => $folio['sso_cfgid']])
+                        ->whereIn('xt_ssov2_configs_cargos_cats_docs_params.cargo_id', $idDocTrab )
+                        ->where(['xt_ssov2_doctypes.doc_status' => 1])
+                        ->distinct('xt_ssov2_configs_cargos_cats_docs_params.doc_id')
+                        ->get(['xt_ssov2_configs_cargos_cats_docs_params.doc_id'])->toArray();
                         unset($docIdTrab);
                         foreach ($documentosTrabObligatorios as  $doctrabObl){
 
@@ -1165,7 +1173,7 @@ class PorcentajeCumplimientoSSOController extends Controller
                 })->export('xlsx');
             }else{
                 $WORK = 0;
-                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','WORK','usuarioNOKactivo'));
+                return view('PorcentajeCumplimientoSSO.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','WORK','usuarioNOKactivo','usuarioClaroChile'));
             }
         }
     }

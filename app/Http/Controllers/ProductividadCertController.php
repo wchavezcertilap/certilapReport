@@ -36,6 +36,7 @@ class ProductividadCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -65,7 +66,7 @@ class ProductividadCertController extends Controller
             $block=1;
         }
 
-        return view('productividad.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','datosVista','block'));
+        return view('productividad.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','datosVista','block','usuarioClaroChile'));
     }
 
     /**
@@ -93,6 +94,7 @@ class ProductividadCertController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -142,7 +144,7 @@ class ProductividadCertController extends Controller
             }
 
      
-        return view('productividad.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','datosVista'));
+        return view('productividad.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','UsuarioCertilap','datosVista','usuarioClaroChile'));
       
        
     }

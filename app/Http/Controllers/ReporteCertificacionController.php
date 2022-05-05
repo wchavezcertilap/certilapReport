@@ -80,6 +80,7 @@ class ReporteCertificacionController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $periodosT = 0;
         $principalesTexto = "";
@@ -111,7 +112,7 @@ class ReporteCertificacionController extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valoresEstados = 0;
-        return view('reporteCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**
@@ -140,6 +141,7 @@ class ReporteCertificacionController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -1274,7 +1276,7 @@ class ReporteCertificacionController extends Controller
                 
             $etiquetasEstados = 0;
             $valoresEstados = 0;
-            return view('reporteCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','listaTitulos','listaCuerpo','contratistaPeriodo','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','etiquetasEstados','valoresEstados','periodosT','principalesTexto'));
+            return view('reporteCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','listaTitulos','listaCuerpo','contratistaPeriodo','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','etiquetasEstados','valoresEstados','periodosT','principalesTexto','usuarioClaroChile'));
         }
 
         if($tipoReporte == 7){

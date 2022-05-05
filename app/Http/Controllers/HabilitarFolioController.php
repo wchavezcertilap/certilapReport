@@ -27,6 +27,7 @@ class HabilitarFolioController extends Controller
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
         $usuarioNOKactivo = session('usuario_nok');
+        $usuarioClaroChile= session('user_Claro');
         if($idUsuario ==  ""){
             return view('sesion.index');
         }
@@ -38,7 +39,7 @@ class HabilitarFolioController extends Controller
 
             if($datosUsuarios->type ==2 || $datosUsuarios->type == 1){
 
-                return view('habilitarFolio.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('habilitarFolio.index',compact('datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -53,6 +54,7 @@ class HabilitarFolioController extends Controller
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
         $usuarioNOKactivo = session('usuario_nok');
+        $usuarioClaroChile= session('user_Claro');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
         $UsuarioPrincipal->load('usuarioDatos');
@@ -64,7 +66,7 @@ class HabilitarFolioController extends Controller
         $data = FolioSso::where('id',$folio)->where('sso_status',0)
                 ->update(['sso_status' => 1]);
         $actualizado = 1;
-        return view('habilitarFolio.index',compact('datosUsuarios','actualizado','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+        return view('habilitarFolio.index',compact('datosUsuarios','actualizado','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
     }
 }

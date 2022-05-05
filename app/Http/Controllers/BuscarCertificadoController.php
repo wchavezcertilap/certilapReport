@@ -33,6 +33,7 @@ class BuscarCertificadoController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -59,7 +60,7 @@ class BuscarCertificadoController extends Controller
         }
 
        
-        return view('buscarCertificado.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('buscarCertificado.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**
@@ -112,6 +113,7 @@ class BuscarCertificadoController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -174,7 +176,7 @@ class BuscarCertificadoController extends Controller
             $cantidaDatos = 0;
         }
 
-        return view('buscarCertificado.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','datosVista','cantidaDatos','usuarioABBChile','usuarioNOKactivo'));
+        return view('buscarCertificado.index',compact('EmpresasP','datosUsuarios','certificacion','usuarioAqua','datosVista','cantidaDatos','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
 
     }
 

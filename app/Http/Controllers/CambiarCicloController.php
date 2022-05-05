@@ -30,6 +30,7 @@ class CambiarCicloController extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         if($idUsuario ==  ""){
             return view('sesion.index');
@@ -44,7 +45,7 @@ class CambiarCicloController extends Controller
 
                 $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-                return view('cambiarCiclo.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+                return view('cambiarCiclo.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
             }
     }
@@ -74,6 +75,7 @@ class CambiarCicloController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -98,15 +100,29 @@ class CambiarCicloController extends Controller
         $fechaUnix = strtotime ( '+1 day' ,strtotime($fecha));
    
         $fechaActual = strtotime("now");
-   
-        $data = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->where('sso_status',1)
+        $term = $input['proyecto'];
+        if($term != ""){
+
+            $data = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->where('sso_status',1)
+                ->where('sso_project','LIKE','%'.$term.'%')
                 ->update(['sso_cycle_aprobdays' => $diasVerif, 
                         'sso_cycle_cargadays' => $diasCarga,
                         'sso_cycle_startdate' => $fechaUnix,
                         'sso_upddat'=>$fechaActual]);
 
+        }else{
+
+            $data = FolioSso::whereIn('sso_mcomp_rut',$rutprincipalR)->where('sso_status',1)
+                ->update(['sso_cycle_aprobdays' => $diasVerif, 
+                        'sso_cycle_cargadays' => $diasCarga,
+                        'sso_cycle_startdate' => $fechaUnix,
+                        'sso_upddat'=>$fechaActual]);
+            
+        }
+       
+
         $actualizado = 1;
-        return view('cambiarCiclo.index',compact('datosUsuarios','EmpresasP','actualizado','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+        return view('cambiarCiclo.index',compact('datosUsuarios','EmpresasP','actualizado','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
     }
 

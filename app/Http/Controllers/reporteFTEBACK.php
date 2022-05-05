@@ -39,6 +39,7 @@ class ReporteFTEController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
         $UsuarioPrincipal->load('usuarioDatos');
@@ -63,7 +64,7 @@ class ReporteFTEController extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valores = 0;
-        return view('reporteFTE.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile'));
+        return view('reporteFTE.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile','usuarioClaroChile'));
     }
 
     /**
@@ -91,6 +92,7 @@ class ReporteFTEController extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
         $UsuarioPrincipal->load('usuarioDatos');
@@ -620,7 +622,7 @@ class ReporteFTEController extends Controller
 
         }else{
             $nodatos = 0;
-            return view('reporteFTE.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile','nodatos'));
+            return view('reporteFTE.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valores','certificacion','usuarioAqua','usuarioABBChile','nodatos','usuarioClaroChile'));
         }
     }
 

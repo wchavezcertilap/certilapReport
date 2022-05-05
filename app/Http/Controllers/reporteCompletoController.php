@@ -55,6 +55,7 @@ class reporteCompletoController extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -86,7 +87,7 @@ class reporteCompletoController extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valoresEstados = 0;
-        return view('reporteCompleto.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteCompleto.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
     /**
      * Store a newly created resource in storage.
@@ -221,10 +222,8 @@ class reporteCompletoController extends Controller
 
             if($id != "") {
                 return $credencial ="Si";
-                    break;
             }else{
                 return $credencial ="No";
-                    break;
             }
         }
 
@@ -232,7 +231,6 @@ class reporteCompletoController extends Controller
 
             if($id == 1) {
                 return $licencia ="Si";
-                    break;
             }if($id == 0) {
                 return $licencia ="No";
             }
@@ -241,10 +239,8 @@ class reporteCompletoController extends Controller
         function licenciaTexto($id){
             if($id == 1) {
                 return $licencia ="Si";
-                    break;
             }if($id == 2){
                 return $licencia ="No";
-                    break;
             }
 
         }
@@ -252,20 +248,16 @@ class reporteCompletoController extends Controller
         function textoCharla($id){
             if($id == 1) {
                 return $charla ="Si";
-                    break;
             }if($id == 2){
                 return $charla ="No";
-                    break;
             }
         }
 
         function textoCarta($id){
             if($id == 1) {
                 return $charla ="Si";
-                    break;
             }if($id == 2){
                 return $charla ="No";
-                    break;
             }
 
         }
@@ -274,10 +266,8 @@ class reporteCompletoController extends Controller
         function credencialReqTexto($id){
             if($id != "") {
                 return $credencial ="Si";
-                    break;
             }else{
                 return $credencial ="No";
-                    break;
             }
         }
 
@@ -824,6 +814,7 @@ class reporteCompletoController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
@@ -1517,7 +1508,7 @@ class reporteCompletoController extends Controller
             }
         } 
 
-        return view('reporteCompleto.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','listaTitulos','listaCuerpo','cuentaTrabajador','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteCompleto.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','listaTitulos','listaCuerpo','cuentaTrabajador','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**

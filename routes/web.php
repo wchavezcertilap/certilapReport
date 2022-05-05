@@ -39,6 +39,7 @@ Route::Get('porProyecto/{id}', 'ReporteAcreditacionController@porProyecto');
 Route::Get('porCategoria/{id}', 'ReporteAcreditacionController@porCategoria');
 Route::Get('porSubContratista/{id}/{idCat}', 'ReporteAcreditacionController@porSubContratista');
 Route::Get('centroCosto/{rut}/{empresaPrincipal}', 'reporteCompletoController@centroCosto');
+//Route::post('create', 'datosEstadistico@create');
 Route::get('inicio/{id}', 'HomeController@inicio');
 Route::get('inicio/ssoTrabajadores/{id}', 'HomeController@ssoTrabajadores');
 Route::get('inicio/ssoFolios/{id}', 'HomeController@ssoFolios');
@@ -47,6 +48,12 @@ Route::get('inicio/ssoEmpresas/{id}', 'HomeController@ssoEmpresas');
 Route::resource('reporteCertificacion', 'ReporteCertificacionController'); 
 Route::Get('porContratista/{id}', 'ReporteCertificacionController@porContratista');
 Route::Get('porCentroCosto/{contratista}/{principal}/{peridoInicio}/{peridoFinal}/{fechaSeleccion}', 'ReporteCertificacionController@porCentroCosto');
+//Route::resource('bloquearContratista', 'BloquearContratistaController');
+Route::resource('reporteCertificacion', 'ReporteCertificacionController'); 
+/*Route::resource('generarOc', 'GenerarOcController');
+Route::get('procesarOc', 'GenerarOcController@procesarOc')->name('generarOc.procesarOc'); 
+Route::post('procesarOc', 'GenerarOcController@procesarOc');
+Route::Get('empresasPago/{tipoEmpresa}/{tipoPago}/{fechaSeleccion}', 'GenerarOcController@empresasPago');*/
 Route::resource('reporteRotacion', 'ReporteRotacion');
 Route::Get('porCentroCostoRotacion/{contratista}/{principal}/{peridoInicio}/{peridoFinal}/{fechaSeleccion}', 'ReporteRotacion@porCentroCostoRotacion');
 Route::Get('porContratistaRotacion/{id}', 'ReporteRotacion@porContratistaRotacion');
@@ -89,5 +96,7 @@ Route::resource('reporteSSOClaro','ReporteSSOClaroController');
 
 Route::resource('informeBE', 'InformeBEController');
 Route::resource('habilitarFolio', 'HabilitarFolioController');
+Route::resource('habilitarFolio', 'HabilitarFolioController');
+Route::resource('reporteSSOClaro','ReporteSSOClaroController');
 
 

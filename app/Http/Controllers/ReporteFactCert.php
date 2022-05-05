@@ -47,6 +47,7 @@ class ReporteFactCert extends Controller
         $usuarioAqua = session('user_aqua');
         $certificacion = session('certificacion');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $periodosT = 0;
         $principalesTexto = "";
@@ -78,7 +79,7 @@ class ReporteFactCert extends Controller
         $periodos->load('mes');
         $etiquetasEstados = 0;
         $valoresEstados = 0;
-        return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));
+        return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
     }
 
     /**
@@ -106,6 +107,7 @@ class ReporteFactCert extends Controller
         $certificacion = session('certificacion');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $UsuarioPrincipal = UsuarioPrincipal::where('systemUserId','=',$idUsuario)->get();
@@ -728,7 +730,7 @@ class ReporteFactCert extends Controller
                 }
             }else{
                 $cantidadDatos = 0;
-                return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','cantidadDatos'));
+                return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','cantidadDatos','usuarioClaroChile'));
             }
 
            
@@ -1201,7 +1203,7 @@ class ReporteFactCert extends Controller
                 }
             }else{
                 $cantidadDatos = 0;
-                return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','cantidadDatos'));
+                return view('factCertificacion.index',compact('EmpresasP','periodos','datosUsuarios','etiquetasEstados','valoresEstados','certificacion','periodosT','principalesTexto','usuarioAqua','usuarioABBChile','usuarioNOKactivo','cantidadDatos','usuarioClaroChile'));
             }
         }
     }
