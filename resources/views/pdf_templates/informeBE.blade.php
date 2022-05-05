@@ -10,7 +10,7 @@
 	<h1 class="text-center">
 		Informe Estadísticas Contratistas y Subcontratistas Banco Estado mes {{ $mes }} - A&ntilde;o {{ $anio }}
 	</h1>
-	<div class="position-absolute">
+	<div class="col-12">
 		<img src="{{ asset("/img/certilap_pdf_portrait.png") }}" alt="">
 	</div>
 </div>
@@ -18,7 +18,7 @@
 	<h4 class="text-justify">
 		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
 	</h4>
-	<div class="position-absolute">
+	<div class="col-12">
 		<table class="table">
 			<thead>
 				<tr>
