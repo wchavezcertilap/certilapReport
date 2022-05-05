@@ -28,14 +28,14 @@
 		<img src="{{ asset("/img/certilap_pdf_portrait.png") }}" alt="">
 	</div>
 </div>
-<div class="page-pdf">
+<div style="page-break-after: always;page-break-inside: avoid;overflow: hidden;" class="page-pdf">
 	<h4 class="text-justify">
 		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
 	</h4>
 	<div class="col-12">
 		<table class="table">
 			<thead>
-				<tr class="row-certilap">
+				<tr style="background-color:#0984e3;color:white;" class="row-certilap">
 					<th>
 						Periodo
 					</th>
