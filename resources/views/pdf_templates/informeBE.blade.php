@@ -48,6 +48,9 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
 <div class="page">
 	<h4 class="text-justify">
 		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
@@ -101,7 +104,32 @@
 <br>
 <br>
 <br>
-<br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
