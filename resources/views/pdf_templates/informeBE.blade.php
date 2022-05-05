@@ -207,6 +207,28 @@
 		<img src="{{ $bars_by_certificate_state }}">
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="page">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por compa&ntilde;&iacute;as recertificadas</h4>
