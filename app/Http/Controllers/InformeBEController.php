@@ -283,6 +283,7 @@ class InformeBEController extends Controller
             }
         $bars_by_empresa_contratista.= ']}]}}';
         ///data to template pdf
+        $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
             'chart_by_company_type' => $chart_by_company_type,
             'bars_by_company_type' => $bars_by_company_type,
@@ -295,6 +296,9 @@ class InformeBEController extends Controller
             'mes' =>  $MAP_MONTH[$curr_month],
             'anio'  => $curr_year,
             'bars_by_empresa_contratista' => $bars_by_empresa_contratista,
+            'header_for_table_first_page' => $header_for_table_first_page,
+            'count_company_per_certificate_state' => $count_company_per_certificate_state,
+            'total_companies' => $total_companies,
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);
