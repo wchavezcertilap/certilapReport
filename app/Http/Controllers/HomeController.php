@@ -112,6 +112,9 @@ class HomeController extends Controller
                  case 78512930:
                       $aquaChile = 1;
                       break;
+                 case 76650680:
+                      $aquaChile = 1;
+                      break;
                  }
             }
             if($aquaChile==1){
@@ -137,6 +140,42 @@ class HomeController extends Controller
                 $usuarioABBChile = 1;
             }else{
                 $usuarioABBChile = 0;
+            }
+
+            /// validacion Claro ///
+            $ClaroChile = 0;
+            foreach($rutprincipal AS $rut)
+            {
+              
+              switch ($rut) {
+                case 96631610:
+                      $ClaroChile = 1;
+                      break;
+                case 96799250:
+                      $ClaroChile = 1;
+                      break;
+                case 94675000:
+                      $ClaroChile = 1;
+                      break;
+                case 96901710:
+                      $ClaroChile = 1;
+                      break;
+                case 88381200:
+                      $ClaroChile = 1;
+                      break;
+                case 95714000:
+                      $ClaroChile = 1;
+                      break;
+                case 95714000:
+                      $ClaroChile = 1;
+                      break;   
+                }
+            }
+            if($ClaroChile==1){
+                session(['user_Claro' => $ClaroChile]);
+                $usuarioClaroChile = 1;
+            }else{
+                $usuarioClaroChile = 0;
             }
         }
   
@@ -165,7 +204,9 @@ class HomeController extends Controller
                 session(['certificacion' => $certificacion]);
                 $usuarioABBChile = 0;
                 session(['user_ABB' => $usuarioABBChile]);
-               
+                $usuarioClaroChile = 0;
+                session(['user_Claro' => $usuarioClaroChile]);
+
                 $fechaHoy = getdate(); 
                 $etiquetaMes =array();
                 $bMeses = array("void","Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -1404,7 +1445,7 @@ class HomeController extends Controller
             $UsuarioContratista->load('usuarioDatos');
 
       //exit();
-        return view('home.index',compact('datosUsuarios','totalFolios','totalDocuementos','totalTrabajadores','totalEmpresasPriSSO','EmpresasP','etiquetaMes','valoresMes','valoresTrabajador','anio','totalDoc','totalDocRechazados','totalDocAprobados','totalDocVencidos','totalDocRevision','mes','totalDocTrabajadores','totalDocRechazadosTrabajadores','totalDocAprobadosTrabajadores','totalDocVencidosTrabajadores','totalDocRevisionTrabajadores','aquaChile','certificacion','cantidadContratistas','cantidadSubContratistas','graficaCertificacion','etiquetaMesCertificacion','valoresMesCerticacion','ssograficos','valoresTrabajadoresCerticacion','estadoIngresado','estadoSolicitado','estadoAprobado','estadoNoAprobado','estadoCertificado','estadoDocumentado','estadoHistorico','estadoCompleto','estadoProceso','estadoNoConforme','estadoInactivo','usuarioAqua','usuarioABBChile','usuarioNOKactivo'));  
+        return view('home.index',compact('datosUsuarios','totalFolios','totalDocuementos','totalTrabajadores','totalEmpresasPriSSO','EmpresasP','etiquetaMes','valoresMes','valoresTrabajador','anio','totalDoc','totalDocRechazados','totalDocAprobados','totalDocVencidos','totalDocRevision','mes','totalDocTrabajadores','totalDocRechazadosTrabajadores','totalDocAprobadosTrabajadores','totalDocVencidosTrabajadores','totalDocRevisionTrabajadores','aquaChile','certificacion','cantidadContratistas','cantidadSubContratistas','graficaCertificacion','etiquetaMesCertificacion','valoresMesCerticacion','ssograficos','valoresTrabajadoresCerticacion','estadoIngresado','estadoSolicitado','estadoAprobado','estadoNoAprobado','estadoCertificado','estadoDocumentado','estadoHistorico','estadoCompleto','estadoProceso','estadoNoConforme','estadoInactivo','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));  
         
         //return view('home.index',compact('datosUsuarios'));
     }
@@ -1483,6 +1524,7 @@ class HomeController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $datosUsuarios->load('cargaUsuarioContratista');
@@ -1550,7 +1592,7 @@ class HomeController extends Controller
                 }
             }
             $WORK = super_unique($WORK2,'rutTrabajador');
-            return view('home.ssoTrabajadores',compact('datosUsuarios','WORK','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoTrabajadores',compact('datosUsuarios','WORK','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
         }
 
@@ -1596,7 +1638,7 @@ class HomeController extends Controller
             }
 
 
-             return view('home.ssoTrabajadores',compact('datosUsuarios','WORK','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+             return view('home.ssoTrabajadores',compact('datosUsuarios','WORK','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         
             
         }
@@ -1611,6 +1653,7 @@ class HomeController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $datosUsuarios->load('cargaUsuarioContratista');
@@ -1625,7 +1668,7 @@ class HomeController extends Controller
                 $rutprincipal[]=$rut['mainCompanyRut'];   
             }
 
-            $folios = FolioSso::whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status', '1')->get(['id','sso_mcomp_rut','sso_mcomp_dv','sso_mcomp_name','sso_comp_rut','sso_comp_dv','sso_comp_name','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_project'])->toArray();
+            $folios = FolioSso::whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status', '1')->get(['id','sso_mcomp_rut','sso_mcomp_dv','sso_mcomp_name','sso_comp_rut','sso_comp_dv','sso_comp_name','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_project','sso_correo'])->toArray();
 
               
             foreach ($folios as $id) {
@@ -1647,16 +1690,17 @@ class HomeController extends Controller
                     $folio["nombreSubContra"] = "";   
                     }
                     $folio["proyecto"] =  ucwords(mb_strtolower($id['sso_project'],'UTF-8'));
+                    $folio["correo"] =  ucwords(mb_strtolower($id['sso_correo'],'UTF-8'));
                     $FOLIOS[] = $folio;
                     
                 }
             }
-            return view('home.ssoFolios',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoFolios',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
 
         if($datosUsuarios->type ==2){
 
-            $folios = FolioSso::where('sso_status', '1')->get(['id','sso_mcomp_rut','sso_mcomp_dv','sso_mcomp_name','sso_comp_rut','sso_comp_dv','sso_comp_name','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_project'])->toArray();
+            $folios = FolioSso::where('sso_status', '1')->get(['id','sso_mcomp_rut','sso_mcomp_dv','sso_mcomp_name','sso_comp_rut','sso_comp_dv','sso_comp_name','sso_subcomp_active','sso_subcomp_rut','sso_subcomp_dv','sso_subcomp_name','sso_project','sso_correo'])->toArray();
 
             foreach ($folios as $id) {
                 
@@ -1677,11 +1721,12 @@ class HomeController extends Controller
                     $folio["nombreSubContra"] = "";   
                     }
                     $folio["proyecto"] =  ucwords(mb_strtolower($id['sso_project'],'UTF-8'));
+                    $folio["correo"] =  ucwords(mb_strtolower($id['sso_correo'],'UTF-8'));
                     $FOLIOS[] = $folio;
                     
                 }
             }
-            return view('home.ssoFolios',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoFolios',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
     }
 
@@ -1693,6 +1738,7 @@ class HomeController extends Controller
         }
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $datosUsuarios->load('cargaUsuarioContratista');
@@ -1773,7 +1819,7 @@ class HomeController extends Controller
                 $totalVencidos = $totalVencidos + $cantidadVencidosTrabajadorTotal;
                 $totalRevision = $totalRevision + $cantidadPorRevisionTrabajadorTotal;
             }
-            return view('home.ssoDocumentos',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','totalDocu','totalRechazados','totalAprobados','totalVencidos','totalRevision','totalAprobadosObs','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoDocumentos',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','totalDocu','totalRechazados','totalAprobados','totalVencidos','totalRevision','totalAprobadosObs','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
 
         if($datosUsuarios->type ==2){
@@ -1820,7 +1866,7 @@ class HomeController extends Controller
                 $totalVencidos = $totalVencidos + $cantidadVencidosTrabajadorTotal;
                 $totalRevision = $totalRevision + $cantidadPorRevisionTrabajadorTotal;
             }
-            return view('home.ssoDocumentos',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','totalDocu','totalRechazados','totalAprobados','totalVencidos','totalRevision','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoDocumentos',compact('datosUsuarios','FOLIOS','certificacion','usuarioAqua','totalDocu','totalRechazados','totalAprobados','totalVencidos','totalRevision','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
     } 
 
@@ -1833,6 +1879,7 @@ class HomeController extends Controller
         $usuarioAqua = session('user_aqua');
         $usuarioNOKactivo = session('usuario_nok');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $datosUsuarios = DatosUsuarioLogin::find($idUsuario);
         $datosUsuarios->load('cargaUsuarioContratista');
         $certificacion = session('certificacion');
@@ -1860,7 +1907,7 @@ class HomeController extends Controller
                     
                 }
             }
-            return view('home.ssoPrincipal',compact('datosUsuarios','Principal','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoPrincipal',compact('datosUsuarios','Principal','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
 
         if($datosUsuarios->type ==2){
@@ -1877,7 +1924,7 @@ class HomeController extends Controller
                     
                 }
             }
-            return view('home.ssoPrincipal',compact('datosUsuarios','Principal','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo')); 
+            return view('home.ssoPrincipal',compact('datosUsuarios','Principal','certificacion','usuarioAqua','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
         }
     }  
 }

@@ -13,6 +13,7 @@
                   <th style="background-color:#e3e3e3">RUT</th>
                   <th style="background-color:#e3e3e3">Estado Certificación</th>
                   <th style="background-color:#e3e3e3">Fecha Certificación</th>
+                  <th style="background-color:#e3e3e3">Fecha Inicio Contrato</th>
                   <th style="background-color:#e3e3e3">Cetro de Costo</th>
                   <th style="background-color:#e3e3e3">Certificado</th>
                   <th style="background-color:#e3e3e3">% Acreditación</th>
@@ -35,10 +36,10 @@
                    {{$datos["apellido2Trabajador"]}}
                  </td>
                   <td>
-                   {{$datos["rutTrabajador"]}}
+                   {{$datos["cargo"]}}
                  </td>
                  <td>
-                   {{$datos["cargo"]}}
+                   {{$datos["rutTrabajador"]}}
                  </td>
                  <td>
                    {{$datos["empresaPrincipal"]}}
@@ -57,6 +58,9 @@
                  </td>
                  <td>
                    {{$datos["fechaCertificacion"]}}
+                 </td>
+                  <td>
+                   {{$datos["FechaInicio"]}}
                  </td>
                  <td>
                    {{$datos["centroCosto"]}}

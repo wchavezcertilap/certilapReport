@@ -31,6 +31,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -55,14 +56,14 @@ class ReporteTrabajadoresSsoAcre extends Controller
 
             $EmpresasP = FolioSso::distinct()->whereIn('sso_mcomp_rut',$rutprincipal)->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo')); 
+            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
         }
         if($datosUsuarios->type ==2 || $datosUsuarios->type ==1 ){
 
             $EmpresasP = FolioSso::distinct()->where('sso_status',1)->orderBy('sso_mcomp_name', 'ASC')->get(['sso_mcomp_name','sso_mcomp_rut']);
 
-            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo')); 
+            return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile')); 
 
         }
     }
@@ -88,6 +89,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         $idUsuario = session('user_id');
         $usuarioAqua = session('user_aqua');
         $usuarioABBChile= session('user_ABB');
+        $usuarioClaroChile= session('user_Claro');
         $usuarioNOKactivo = session('usuario_nok');
         $certificacion = session('certificacion');
         if($idUsuario ==  ""){
@@ -199,11 +201,11 @@ class ReporteTrabajadoresSsoAcre extends Controller
                                 if($result_array > 0){
                                     $trabajadorVerificacion = TrabajadorVerificacion::where('rut',(int)$rutLimpio)->where('dv',$rutDV)->where('periodId',(int)$peridoInicio)
                                     ->where('companyRut',(int)$trabajador["sso_comp_rut"])->whereIn('mainCompanyRut',$rutprincipalAqua)
-                                    ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter'])->toArray();
+                                    ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter','beginDate'])->toArray();
                                 }else{
                                     $trabajadorVerificacion = TrabajadorVerificacion::where('rut',(int)$rutLimpio)->where('dv',$rutDV)->where('periodId',(int)$peridoInicio)
                                     ->where('companyRut',(int)$trabajador["sso_comp_rut"])->where('mainCompanyRut',(int)$trabajador["sso_mcomp_rut"])
-                                    ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter'])->toArray();
+                                    ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter','beginDate'])->toArray();
                                 }
 
                                 if(!empty($trabajadorVerificacion)){
@@ -267,6 +269,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
                                     $datosReporte["fechaCertificacion"] = $fechaCertificacion;
                                     $datosReporte["centroCosto"] = ucwords(mb_strtolower($trabajadorVerificacion[0]['companyCenter'],'UTF-8'));
                                     $datosReporte["Certificacion"] = "SI";
+                                    $datosReporte["FechaInicio"] = date('d/m/Y', $trabajadorVerificacion[0]["beginDate"]);
                                     $datosReporte["porcentajeTrabajador"] =  0;
                                 }else{
                                     $datosReporte["folioSSO"] = $trabajador["id"];
@@ -283,6 +286,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
                                     $datosReporte["fechaCertificacion"] = "";
                                     $datosReporte["centroCosto"] = "";
                                     $datosReporte["Certificacion"] = "NO";
+                                    $datosReporte["FechaInicio"] = "";
 
                                     $documentos = EstadoDocumento::where('upld_sso_id', $trabajador["id"])->where('upld_workerid',$trabajador["idt"])->where('upld_status',1)->where('upld_type',1)->
                                     get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
@@ -388,11 +392,11 @@ class ReporteTrabajadoresSsoAcre extends Controller
                             if($result_array > 0){
                                 $trabajadorVerificacion = TrabajadorVerificacion::where('rut',(int)$rutLimpio)->where('dv',$rutDV)->where('periodId',(int)$peridoInicio)
                                 ->where('companyRut',(int)$trabajador["sso_comp_rut"])->whereIn('mainCompanyRut',$rutprincipalAqua)
-                                ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter'])->toArray();
+                                ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter','beginDate'])->toArray();
                             }else{
                                 $trabajadorVerificacion = TrabajadorVerificacion::where('rut',(int)$rutLimpio)->where('dv',$rutDV)->where('periodId',(int)$peridoInicio)
                                 ->where('companyRut',(int)$trabajador["sso_comp_rut"])->where('mainCompanyRut',(int)$trabajador["sso_mcomp_rut"])
-                                ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter'])->toArray();
+                                ->get(['rut','dv','names','firstLastName','secondLastName','mainCompanyRut','companyRut','mainCompanyName','companyName','position','companyCenter','beginDate'])->toArray();
                             }
 
                             if(!empty($trabajadorVerificacion)){
@@ -456,6 +460,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
                                 $datosReporte["centroCosto"] = ucwords(mb_strtolower($trabajadorVerificacion[0]["companyCenter"],'UTF-8'));;
                                 $datosReporte["fechaCertificacion"] = $fechaCertificacion;
                                 $datosReporte["Certificacion"] = "SI";
+                                $datosReporte["FechaInicio"] = date('d/m/Y', $trabajadorVerificacion[0]["beginDate"]);
                                 $documentos = EstadoDocumento::where('upld_sso_id', $trabajador["id"])->where('upld_workerid',$trabajador["idt"])->where('upld_status',1)->where('upld_type',1)->
                                     get(['id','upld_catid','upld_docid','upld_docaprob','upld_venced','upld_vence_date', 'upld_rechazado', 'upld_upddat','upld_docaprob_uid'])->toArray();
                
@@ -517,6 +522,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
                                 $datosReporte["fechaCertificacion"] = "";
                                 $datosReporte["centroCosto"] = "";
                                 $datosReporte["Certificacion"] = "NO";
+                                $datosReporte["FechaInicio"] = "";
                                 
 
                                 $documentos = EstadoDocumento::where('upld_sso_id', $trabajador["id"])->where('upld_workerid',$trabajador["idt"])->where('upld_status',1)->where('upld_type',1)->
@@ -591,7 +597,7 @@ class ReporteTrabajadoresSsoAcre extends Controller
         } 
      
         $lista=0;
-        return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','lista','usuarioABBChile','usuarioNOKactivo'));
+        return view('reporteSsoCertificacion.index',compact('datosUsuarios','EmpresasP','certificacion','usuarioAqua','periodos','lista','usuarioABBChile','usuarioNOKactivo','usuarioClaroChile'));
 
     }
 
