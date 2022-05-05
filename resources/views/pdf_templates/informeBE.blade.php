@@ -239,6 +239,12 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="page">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por compa&ntilde;&iacute;as recertificadas</h4>
@@ -250,6 +256,44 @@
 		<img src="{{ $bars_by_rectificadas }}">
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="page">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por genero de trabajadores</h4>
