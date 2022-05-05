@@ -15,6 +15,11 @@
 	<br>
 	<br>
 	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 	<div class="col-12">
 		<img src="{{ asset("/img/certilap_pdf_portrait.png") }}" alt="">
 	</div>
