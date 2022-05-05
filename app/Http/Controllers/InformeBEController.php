@@ -273,7 +273,7 @@ class InformeBEController extends Controller
                 if ($index_counter_names > 0) {
                     $bars_by_empresa_contratista.= ',';
                 }
-                $bars_by_empresa_contratista.= "'" .  str_replace('&', '', $value) . "'";
+                $bars_by_empresa_contratista.= "'" . strtolower(str_replace('&', '', $value) ) . "'";
                 $index_counter_names ++;
             }
         $bars_by_empresa_contratista.= "],datasets:[{label:%27Por empresa contratista%27, data:[";
