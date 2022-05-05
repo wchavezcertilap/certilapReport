@@ -207,7 +207,11 @@ class InformeBEController extends Controller
             if ($i_percent_per_certificate_state > 0) {
                 $string_line_for_data_chart.= ',';
             }
-            $string_line_for_data_chart.= "" . round($value, 2) . "";
+            if ($value > 15) {
+                $string_line_for_data_chart.= "" . round($value, 2) . "";
+            } else {
+                $string_line_for_data_chart.= "" . ' ' . "";
+            }
             $i_percent_per_certificate_state ++;
         }
 
@@ -218,7 +222,7 @@ class InformeBEController extends Controller
             if ($i_labels_for_pie_chart > 0) {
                 $string_line_for_label_chart.= ',';
             }
-            $string_line_for_label_chart.= '"'. $value .' ('. $percent_company_per_certificate_state[$i_labels_for_pie_chart+1] .' %)"';
+            $string_line_for_label_chart.= '"'. $value .' ('.  round($percent_company_per_certificate_state[$i_labels_for_pie_chart+1], 2) .' %)"';
             $i_labels_for_pie_chart ++;
         }
         $chart->setConfig('{
