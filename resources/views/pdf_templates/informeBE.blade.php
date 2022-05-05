@@ -1,12 +1,12 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <style type="text/css" media="print">
-    .page{
+    .page-pdf {
         page-break-after: always;
         page-break-inside: avoid;
 		overflow: hidden;
     }
 </style>
-<div class="page">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<div class="page-pdf">
 	<h1 class="text-center">
 		Informe Estad&iacute;sticas Contratistas y Subcontratistas Banco Estado mes {{ $mes }} - A&ntilde;o {{ $anio }}
 	</h1>
@@ -51,7 +51,7 @@
 <br>
 <br>
 <br>
-<div class="page">
+<div class="page-pdf">
 	<h4 class="text-justify">
 		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
 	</h4>
@@ -279,6 +279,10 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
 <div class="page">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por genero de trabajadores</h4>
@@ -290,6 +294,10 @@
 	<img src="{{ $bars_by_genre }}">
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
