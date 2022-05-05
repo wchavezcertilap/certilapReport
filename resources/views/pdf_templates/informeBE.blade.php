@@ -8,12 +8,31 @@
 </style>
 <div class="page">
 	<h1 class="text-center">
-		Informe Estadísticas Contratistas y Subcontratistas Banco Estado mes {{ $mes }} - A&ntilde;o {{ $anio }}
+		Informe Estad&iacute;sticas Contratistas y Subcontratistas Banco Estado mes {{ $mes }} - A&ntilde;o {{ $anio }}
 	</h1>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 	<div class="col-12">
 		<img src="{{ asset("/img/certilap_pdf_portrait.png") }}" alt="">
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <div class="page">
 	<h4 class="text-justify">
@@ -54,6 +73,34 @@
 		</table>
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <div class="page">
 	<div class="col-12">
