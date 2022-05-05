@@ -24,33 +24,6 @@
 		<img src="{{ asset("/img/certilap_pdf_portrait.png") }}" alt="">
 	</div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <div class="page-pdf">
 	<h4 class="text-justify">
 		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
@@ -90,113 +63,7 @@
 		</table>
 	</div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="page">
-	<div class="col-12">
-		<h4>Gr&aacute;fica por tipo de Empresa</h4>
-	</div>
-	<div class="col-12 text-center">
-		<img src="{{ $chart_by_company_type }}">
-	</div>
-	<div class="col-12 text-center">
-		<img src="{{ $bars_by_company_type }}">
-	</div>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="page">
+<div class="page-pdf">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por estado de certificacion</h4>
 	</div>
@@ -207,45 +74,18 @@
 		<img src="{{ $bars_by_certificate_state }}">
 	</div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="page">
+<div class="page-pdf">
+	<div class="col-12">
+		<h4>Gr&aacute;fica por tipo de Empresa</h4>
+	</div>
+	<div class="col-12 text-center">
+		<img src="{{ $chart_by_company_type }}">
+	</div>
+	<div class="col-12 text-center">
+		<img src="{{ $bars_by_company_type }}">
+	</div>
+</div>
+<div class="page-pdf">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por compa&ntilde;&iacute;as recertificadas</h4>
 	</div>
@@ -256,34 +96,7 @@
 		<img src="{{ $bars_by_rectificadas }}">
 	</div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="page">
+<div class="page-pdf">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por genero de trabajadores</h4>
 	</div>
@@ -294,35 +107,7 @@
 	<img src="{{ $bars_by_genre }}">
 	</div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="page">
+<div class="page-pdf">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por empresas contratistas</h4>
 	</div>
