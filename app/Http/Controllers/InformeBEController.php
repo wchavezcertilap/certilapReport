@@ -229,7 +229,7 @@ class InformeBEController extends Controller
             "type": "pie",
             "data": {
                 "datasets": [{
-                    "backgroundColor": ["#FF3784", "#36A2EB", "#4BC0C0", "#F77825", "#9966FF", "#9955FF", "#996600", "#3366FF", "#1533FF", "#8866FF", "#9977FF"],
+                    "backgroundColor": ["#6D214F", "#F97F51", "#FC427B", "#F77825", "#BDC581", "#82589F", "#996600", "#58B19F", "#1533FF", "#EAB543", "#F97F51"],
                     "data": ['. $string_line_for_data_chart .'],
                     "label": "Estado de certificacion"
                 }],
