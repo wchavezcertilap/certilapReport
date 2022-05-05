@@ -204,22 +204,6 @@
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <div class="page">
 	<div class="col-12">
 		<h4>Gr&aacute;fica por estado de certificacion</h4>
