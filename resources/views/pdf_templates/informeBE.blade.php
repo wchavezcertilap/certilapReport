@@ -31,7 +31,7 @@
 	<div class="col-12">
 		<table class="table">
 			<thead>
-				<tr>
+				<tr class="primary">
 					<th>
 						Periodo
 					</th>
@@ -46,7 +46,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
+				<tr class="primary">
 					<td>
 						{{ $mes }}
 					</td>
