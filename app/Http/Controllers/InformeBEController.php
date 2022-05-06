@@ -101,7 +101,7 @@ class InformeBEController extends Controller
         echo '<br>' . $input; //Primer dia del mes formato normal
         echo '<br>' . $quincena; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
-        echo '<br>' . strtotime($fechaf); //Dia en el que acaba la quincena
+        echo '<br>' . $fechaf; //Dia en el que acaba la quincena
         exit();
 
         if($curr_month == 0) {
