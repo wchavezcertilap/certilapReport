@@ -88,8 +88,9 @@ class InformeBEController extends Controller
         $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-01' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
 
+        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-01'; //Dia inicial formaato normal
         echo '<br>' . $diaquince; //dia de quincena filtrado
-        echo '<br>' . $quincena; //quincena formato normal
+        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
         echo '<br>' . $fechaf; //Dia en el que acaba la quincena
         exit();
