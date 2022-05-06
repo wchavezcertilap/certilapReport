@@ -63,23 +63,16 @@ class InformeBEController extends Controller
         $diaquince = 15;
         $quincena  = $diaquince . '/0' . $curr_month. '/' . $curr_year;
         $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince;
-        echo $quincena;
         $dayofweek = date('w', strtotime($quincena));
-        echo $dayofweek;
-        exit();
-        if($diaSemanaQuincena == 0 or $diaSemanaQuincena == 6){
-            //echo "hola";
-            if($diaSemanaQuincena == 0){
-                $quincena  = '16/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+        if($dayofweek == 0 or $dayofweek == 6){
+            if($dayofweek == 0){
+                $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 1;
             }
             if($diaSemanaQuincena == 6){
-                $quincena  = '17/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+                $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 2;
             }
 
         }
-
-       // echo $quincena;
-        exit();
         if($curr_month < 10){
             $input = '01/0'.$curr_month.'/'.$curr_year.' 00:00:00';
             $fecha1 = strtotime($input);
@@ -90,10 +83,8 @@ class InformeBEController extends Controller
             $fechap = (int)$fecha1-(3600*20);
         }
         
-        echo $fechap;
-
-       
-
+        echo '<br>' . $fechap; //Primer dia del mes
+        echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
         exit();
 
         if($curr_month == 0) {
