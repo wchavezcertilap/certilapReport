@@ -70,34 +70,25 @@ class InformeBEController extends Controller
 
         //Dates logic
         $currtme    = time();
-        // $curr_month = 4;
         $curr_year  = (int)date("Y", $currtme);
         $curr_month  = (int)date("m", $currtme);
         $diaquince = 15;
-        $quincena  = $diaquince . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year;
         ///Este formato para esta operacion de obtener el dia de la semana
         $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
         $dayofweek = date('w', strtotime($quincena)); // 0 a 6. 0 Domingo, 6 Sabado
         if($dayofweek == 0 or $dayofweek == 6){
             if($dayofweek == 0){
-                // $quincena  = $curr_year . '-0' . $curr_month . '-' . 16;
-                $quincena  = 16 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00'; //Periodo culmina el lunes 16 despues del domingo 15
                 $diaquince = 16; //Variable para la conversion en UNIX
             }
             if($dayofweek == 6){
-                $quincena  = 17 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00';//Periodo culmina el lunes 17 despues del sabado 15
                 $diaquince = 17; //Variable para la conversion en UNIX
             }
-        } else {
-            // Si es laboral. Sera el 15 pero con el siguiente formato.
-            $quincena  = 15 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00';
         }
-        //Fecha inicial
-        $input = '01/' . $MAP_MONTH_NUMBER[$curr_month] . '/' .$curr_year. ' 00:00:00';
-        $fecha1 = strtotime($input);
-        $fechap = (int)$fecha1-(3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
-        $fechaf = strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
+        //Intervalo de fechas
+        $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-01' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
 
+        echo '<br>' . $diaquince; //dia de quincena filtrado
         echo '<br>' . $input; //Primer dia del mes formato normal
         echo '<br>' . $quincena; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
