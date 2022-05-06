@@ -147,7 +147,10 @@ class InformeBEController extends Controller
         ->whereBetween('certificateDate', array($fechap,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
-        print_r($empresaContratistaSinDocumentar);
+        
+
+        $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
+        $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $total_companies;
 
          // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
         $estadosConformes = [10,5];
@@ -158,8 +161,38 @@ class InformeBEController extends Controller
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
 
-        print_r($empresasContratistaAprobados);
-    
+        $_total_de_empresas_aprobadas = count($empresasContratistaAprobados);
+        $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $total_companies;
+
+        $chartEmpresasSinDocumentarAprobadas = new QuickChart(array(
+            'width' => 600,
+            'height' => 400
+        ));
+
+        $string_line_for_data_empresas_sin_documentar_empresas_aprobadas = "";
+        $labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas = ["Sin Documentar","Aprobadas"];
+        $percent_empresas_sin_documentar_empresas_aprobadas = [$_percent_total_de_empresas_sin_documentar, $_percent_total_de_empresas_aprobadas];
+        $i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas = 0;
+        $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas = "";
+        foreach ($labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas as $key => $value) {
+            if ($i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas > 0) {
+                $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= ',';
+            }
+            $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= '"'. $value .' ('.  round($percent_empresas_sin_documentar_empresas_aprobadas[$i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas+1], 2) .' %)"';
+            $i_labels_for_pie_chart ++;
+        }
+        $chartEmpresasSinDocumentarAprobadas->setConfig('{
+            "type": "pie",
+            "data": {
+                "datasets": [{
+                    "backgroundColor": ["#6D214F", "#F97F51"],
+                    "data": ['. $string_line_for_data_chart .'],
+                    "label": "Empresas sin documentar/aprobadas"
+                }],
+                "labels": [' . $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas . ']
+            },
+        }');
+        $chart_empresas_sin_documentar_empresas_aprobadas = $chartEmpresasSinDocumentarAprobadas->getUrl();
         $empresasContratistaRecertificacion = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
             ->where('center','LIKE','%(RECERTIFICACION)%')
@@ -344,16 +377,6 @@ class InformeBEController extends Controller
                 $index_counter_rut ++;
             }
         $bars_by_empresa_contratista.= ']}]}}';
-
-        
-
-        exit();
-       
-
-
-
-
-
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
