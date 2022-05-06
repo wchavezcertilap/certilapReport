@@ -66,10 +66,10 @@ class InformeBEController extends Controller
         $dayofweek = date('w', strtotime($quincena));
         if($dayofweek == 0 or $dayofweek == 6){
             if($dayofweek == 0){
-                $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 1;
+                $quincena  = $curr_year . '-0' . $curr_month . '-' . 16;
             }
             if($dayofweek == 6){
-                $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 2;
+                $quincena  = $curr_year . '-0' . $curr_month . '-' . 17;
             }
 
         }
@@ -82,7 +82,9 @@ class InformeBEController extends Controller
             $fecha1 = strtotime($input);
             $fechap = (int)$fecha1-(3600*20);
         }
-        
+
+        echo '<br>' . $quincena; //quincena formato normal
+        echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
         echo '<br>' . $fechap; //Primer dia del mes
         echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
         exit();
