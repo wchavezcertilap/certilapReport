@@ -59,6 +59,42 @@ class InformeBEController extends Controller
         $currtme    = time();
         $curr_month = 4;
         $curr_year  = (int)date("Y", $currtme);
+        $curr_month  = (int)date("m", $currtme);
+        $diaquince = 15;
+        $quincena  = $diaquince.'/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+
+        
+        echo $quincena;
+        $diaSemanaQuincena = date("w",strtotime($quincena));
+        echo $diaSemanaQuincena;
+        if($diaSemanaQuincena == 0 or $diaSemanaQuincena == 6){
+            //echo "hola";
+            if($diaSemanaQuincena == 0){
+                $quincena  = '16/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+            }
+            if($diaSemanaQuincena == 6){
+                $quincena  = '17/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+            }
+
+        }
+
+       // echo $quincena;
+        exit();
+        if($curr_month < 10){
+            $input = '01/0'.$curr_month.'/'.$curr_year.' 00:00:00';
+            $fecha1 = strtotime($input);
+            $fechap = (int)$fecha1-(3600*20);
+        }else{
+            $input = '01/'.$curr_month.'/'.$curr_year.' 00:00:00';
+            $fecha1 = strtotime($input);
+            $fechap = (int)$fecha1-(3600*20);
+        }
+        
+        echo $fechap;
+
+       
+
+        exit();
 
         if($curr_month == 0) {
             $curr_month = 12;
@@ -288,12 +324,12 @@ class InformeBEController extends Controller
         $bars_by_empresa_contratista.= ']}]}}';
 
          /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
-        $estadosSinDocumentar = [1,2,9,8,11,6];
+        $estadosSinDocumentar = [1,2,8];
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
         ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
         ->where('Company.periodId',$idPerido)
-        ->whereIn('Company.periodId',$estadosSinDocumentar)
-        ->whereBetween('CertificateHistory.certificateState', array($fecha1,  $fecha2))
+        ->whereIn('Company.certificateState',$estadosSinDocumentar)
+        ->whereBetween('CertificateHistory.certificateState', array($fechap,  $fecha2))
         ->orderBy('id', 'ASC')
         ->get(['Company.id','Company.rut','Company.name'])->toArray();
  /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
