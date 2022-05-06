@@ -71,7 +71,8 @@ class InformeBEController extends Controller
         //Dates logic
         $currtme    = time();
         $curr_year  = (int)date("Y", $currtme);
-        $curr_month  = (int)date("m", $currtme);
+        // $curr_month  = (int)date("m", $currtme);
+        $curr_month  = 4;
         $diaquince = 16;
         ///Este formato para esta operacion de obtener el dia de la semana
         $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
@@ -87,13 +88,8 @@ class InformeBEController extends Controller
         //Intervalo de fechas
         $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
-
-        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02'; //Dia inicial formaato normal
-        echo '<br>' . $diaquince; //dia de quincena filtrado
-        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
         echo '<br>' . $fechaf; //Dia en el que acaba la quincena
-        exit();
 
         if($curr_month == 0) {
             $curr_month = 12;
@@ -324,13 +320,15 @@ class InformeBEController extends Controller
 
          /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
         $estadosSinDocumentar = [1,2,8];
-        $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        $empresaContratistaSinDocumentar = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
         ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
         ->where('Company.periodId',$idPerido)
         ->whereIn('Company.certificateState',$estadosSinDocumentar)
-        ->whereBetween('CertificateHistory.certificateState', array($fechap,  $fecha2))
+        ->whereBetween('CertificateHistory.certificateState', array($fechap,  $fechaf))
         ->orderBy('id', 'ASC')
         ->get(['Company.id','Company.rut','Company.name'])->toArray();
+        print_r($empresaContratistaSinDocumentar);
+        exit();
  /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
         $estadosConformes = [10,5];
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
