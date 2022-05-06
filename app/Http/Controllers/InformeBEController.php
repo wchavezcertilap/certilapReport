@@ -72,23 +72,23 @@ class InformeBEController extends Controller
         $currtme    = time();
         $curr_year  = (int)date("Y", $currtme);
         $curr_month  = (int)date("m", $currtme);
-        $diaquince = 15;
+        $diaquince = 16;
         ///Este formato para esta operacion de obtener el dia de la semana
         $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
         $dayofweek = date('w', strtotime($quincena)); // 0 a 6. 0 Domingo, 6 Sabado
         if($dayofweek == 0 or $dayofweek == 6){
             if($dayofweek == 0){
-                $diaquince = 16; //Variable para la conversion en UNIX
+                $diaquince = 17; //Variable para la conversion en UNIX
             }
             if($dayofweek == 6){
-                $diaquince = 17; //Variable para la conversion en UNIX
+                $diaquince = 18; //Variable para la conversion en UNIX
             }
         }
         //Intervalo de fechas
-        $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-01' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
 
-        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-01'; //Dia inicial formaato normal
+        echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02'; //Dia inicial formaato normal
         echo '<br>' . $diaquince; //dia de quincena filtrado
         echo '<br>' . $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
