@@ -41,6 +41,19 @@ class InformeBEController extends Controller
      */
     public function index()
     {
+        ////MAP OF MONTHS NUMBERS STRINGS
+        $MAP_MONTH_NUMBER[1] = '01';
+        $MAP_MONTH_NUMBER[2] = '02';
+        $MAP_MONTH_NUMBER[3] = '03';
+        $MAP_MONTH_NUMBER[4] = '04';
+        $MAP_MONTH_NUMBER[5] = '05';
+        $MAP_MONTH_NUMBER[6] = '06';
+        $MAP_MONTH_NUMBER[7] = '07';
+        $MAP_MONTH_NUMBER[8] = '08';
+        $MAP_MONTH_NUMBER[9] = '09';
+        $MAP_MONTH_NUMBER[10] = '10';
+        $MAP_MONTH_NUMBER[11] = '11';
+        $MAP_MONTH_NUMBER[12] = '12';
         ////MAP OF MONTHS
         $MAP_MONTH[1] = 'Enero';
         $MAP_MONTH[2] = 'Febrero';
@@ -61,30 +74,29 @@ class InformeBEController extends Controller
         $curr_year  = (int)date("Y", $currtme);
         $curr_month  = (int)date("m", $currtme);
         $diaquince = 15;
-        $quincena  = $diaquince . '/0' . $curr_month. '/' . $curr_year;
-        $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince;
-        $dayofweek = date('w', strtotime($quincena));
+        $quincena  = $diaquince . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year;
+        ///Este formato para esta operacion de obtener el dia de la semana
+        $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
+        $dayofweek = date('w', strtotime($quincena)); // 0 a 6. 0 Domingo, 6 Sabado
         if($dayofweek == 0 or $dayofweek == 6){
             if($dayofweek == 0){
-                $quincena  = $curr_year . '-0' . $curr_month . '-' . 16;
+                // $quincena  = $curr_year . '-0' . $curr_month . '-' . 16;
+                $quincena  = 16 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00'; //Periodo culmina el lunes 16 despues del domingo 15
             }
             if($dayofweek == 6){
-                $quincena  = $curr_year . '-0' . $curr_month . '-' . 17;
+                $quincena  = 17 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00';//Periodo culmina el lunes 17 despues del sabado 15
             }
-
+        } else {
+            // Si es laboral. Sera el 15 pero con el siguiente formato.
+            $quincena  = 15 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00';
         }
-        if($curr_month < 10){
-            $input = '01/0'.$curr_month.'/'.$curr_year.' 00:00:00';
-            $fecha1 = strtotime($input);
-            $fechap = (int)$fecha1-(3600*20);
-        }else{
-            $input = '01/'.$curr_month.'/'.$curr_year.' 00:00:00';
-            $fecha1 = strtotime($input);
-            $fechap = (int)$fecha1-(3600*20);
-        }
+        //Fecha inicial
+        $input = '01/' . $MAP_MONTH_NUMBER[$curr_month] . '/' .$curr_year. ' 00:00:00';
+        $fecha1 = strtotime($input);
+        $fechap = (int)$fecha1-(3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
 
+        echo '<br>' . $input; //Primer dia del mes formato normal
         echo '<br>' . $quincena; //quincena formato normal
-        echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
         echo '<br>' . $fechap; //Primer dia del mes
         echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
         exit();
