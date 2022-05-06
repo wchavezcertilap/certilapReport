@@ -286,6 +286,30 @@ class InformeBEController extends Controller
                 $index_counter_rut ++;
             }
         $bars_by_empresa_contratista.= ']}]}}';
+
+         /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
+        $estadosSinDocumentar = [1,2,9,8,11,6];
+        $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
+        ->where('Company.periodId',$idPerido)
+        ->whereIn('Company.periodId',$estadosSinDocumentar)
+        ->whereBetween('CertificateHistory.certificateState', array($fecha1,  $fecha2))
+        ->orderBy('id', 'ASC')
+        ->get(['Company.id','Company.rut','Company.name'])->toArray();
+ /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
+        $estadosConformes = [10,5];
+        $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
+        ->where('Company.periodId',$idPerido)
+        ->whereIn('Company.periodId',$estadosConformes)
+        ->whereBetween('CertificateHistory.certificateState', array($fecha1,  $fecha2))
+        ->orderBy('id', 'ASC')
+        ->get(['Company.id','Company.rut','Company.name'])->toArray();
+
+
+
+
+
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
