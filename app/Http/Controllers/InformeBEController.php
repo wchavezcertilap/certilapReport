@@ -71,8 +71,8 @@ class InformeBEController extends Controller
         //Dates logic
         $currtme    = time();
         $curr_year  = (int)date("Y", $currtme);
-        // $curr_month  = (int)date("m", $currtme);
-        $curr_month  = 4;
+        $curr_month  = (int)date("m", $currtme);
+       
         $diaquince = 16;
         ///Este formato para esta operacion de obtener el dia de la semana
         $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
@@ -88,8 +88,13 @@ class InformeBEController extends Controller
         //Intervalo de fechas
         $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
-        echo '<br>' . $fechap; //Primer dia del mes
-        echo '<br>' . $fechaf; //Dia en el que acaba la quincena
+        //echo '<br>' . $fechap; //Primer dia del mes
+        //echo '<br>' . $fechaf; //Dia en el que acaba la quincena
+
+        $fechap2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-17' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechaf2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month+1] . '-01') - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 
+
+     
 
         if($curr_month == 0) {
             $curr_month = 12;
@@ -108,14 +113,14 @@ class InformeBEController extends Controller
             ->get(['id', 'monthId','year']);
 
         if(isset($periodosIT[0]['id'])){
-            $idPerido = $periodosIT[0]['id']-1;
+            $idPerido = $periodosIT[0]['id'];
         }
 
         $rutprincipalR = 97030000;
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
-            ->orderBy('id', 'ASC')
-            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+            ->orderBy('rut', 'ASC')
+            ->get(['rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
 
         $count_company_per_type[1] = 0;
         $count_company_per_type[2] = 0;
@@ -132,13 +137,35 @@ class InformeBEController extends Controller
         foreach ($count_company_per_type as $key => $value) {
             $percent_company_per_type[$key] = $value * 100 / $total_companies; //Porcentaje por tipo de compañia Torta
         }
+
+
+        /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
+        $estadosSinDocumentar = [1,2,8];
+        $empresaContratistaSinDocumentar = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)  
+        ->where('periodId',$idPerido)
+        ->whereIn('certificateState',$estadosSinDocumentar)
+        ->whereBetween('certificateDate', array($fechap,  $fechaf))
+        ->orderBy('rut', 'ASC')
+        ->get(['rut','name'])->toArray();
+        print_r($empresaContratistaSinDocumentar);
+
+         // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
+        $estadosConformes = [10,5];
+        $empresasContratistaAprobados = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)   
+        ->where('periodId',$idPerido)
+        ->whereIn('certificateState',$estadosConformes)
+        ->whereBetween('certificateState', array($fechap2,  $fechaf))
+        ->orderBy('rut', 'ASC')
+        ->get(['rut','name'])->toArray();
+
+        print_r($empresasContratistaAprobados);
     
         $empresasContratistaRecertificacion = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
             ->where('center','LIKE','%(RECERTIFICACION)%')
             ->orWhere('center','LIKE','%RECERTIFICACION')
-            ->orderBy('id', 'ASC')
-            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+            ->orderBy('rut', 'ASC')
+            ->get(['rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
 
         // Porcentaje empresas rectificadas
         $total_rectificadas = sizeof($empresasContratistaRecertificacion);
@@ -318,26 +345,10 @@ class InformeBEController extends Controller
             }
         $bars_by_empresa_contratista.= ']}]}}';
 
-         /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
-        $estadosSinDocumentar = [1,2,8];
-        $empresaContratistaSinDocumentar = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
-        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
-        ->where('Company.periodId',$idPerido)
-        ->whereIn('Company.certificateState',$estadosSinDocumentar)
-        ->whereBetween('CertificateHistory.certificateState', array($fechap,  $fechaf))
-        ->orderBy('id', 'ASC')
-        ->get(['Company.id','Company.rut','Company.name'])->toArray();
-        print_r($empresaContratistaSinDocumentar);
+        
+
         exit();
- /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
-        $estadosConformes = [10,5];
-        $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
-        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')                    
-        ->where('Company.periodId',$idPerido)
-        ->whereIn('Company.periodId',$estadosConformes)
-        ->whereBetween('CertificateHistory.certificateState', array($fecha1,  $fecha2))
-        ->orderBy('id', 'ASC')
-        ->get(['Company.id','Company.rut','Company.name'])->toArray();
+       
 
 
 

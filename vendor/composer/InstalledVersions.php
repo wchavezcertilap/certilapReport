@@ -19,11 +19,20 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '3c4107cb6aa3ad6a79c962a4b5c9af82ffa34385',
+    'reference' => 'd8f935419e2961dea8e823ea942542b7d6526cf5',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
   array (
+    'barryvdh/laravel-debugbar' => 
+    array (
+      'pretty_version' => 'v2.4.3',
+      'version' => '2.4.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd7c88f08131f6404cb714f3f6cf0642f6afa3903',
+    ),
     'barryvdh/laravel-snappy' => 
     array (
       'pretty_version' => 'v0.4.1',
@@ -453,7 +462,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '3c4107cb6aa3ad6a79c962a4b5c9af82ffa34385',
+      'reference' => 'd8f935419e2961dea8e823ea942542b7d6526cf5',
     ),
     'laravel/passport' => 
     array (
@@ -549,6 +558,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'f5540c4ba3ac50cebd98b09ca42e61f926ef299f',
+    ),
+    'maximebf/debugbar' => 
+    array (
+      'pretty_version' => '1.13.1',
+      'version' => '1.13.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'afee79a236348e39a44cb837106b7c5b4897ac2a',
     ),
     'mockery/mockery' => 
     array (
