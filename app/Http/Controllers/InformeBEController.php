@@ -57,16 +57,16 @@ class InformeBEController extends Controller
 
         //Dates logic
         $currtme    = time();
-        $curr_month = 4;
+        // $curr_month = 4;
         $curr_year  = (int)date("Y", $currtme);
         $curr_month  = (int)date("m", $currtme);
         $diaquince = 15;
-        $quincena  = $diaquince.'/0'.$curr_month.'/'.$curr_year.' 00:00:00';
-
-        
+        $quincena  = $diaquince . '/0' . $curr_month. '/' . $curr_year;
+        $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince;
         echo $quincena;
-        $diaSemanaQuincena = date("w",strtotime($quincena));
-        echo $diaSemanaQuincena;
+        $dayofweek = date('w', strtotime($quincena));
+        echo $dayofweek;
+        exit();
         if($diaSemanaQuincena == 0 or $diaSemanaQuincena == 6){
             //echo "hola";
             if($diaSemanaQuincena == 0){
