@@ -287,7 +287,7 @@ class InformeBEController extends Controller
             $percent_company_per_certificate_state[$key] = $value * 100 / $total_companies; //percent
         }
         ////By Company type percent
-        $chart = new QuickChart(array(
+        $chart = new \QuickChart(array(
             'width' => 500,
             'height' => 300
         ));
