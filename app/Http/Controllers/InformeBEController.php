@@ -68,7 +68,7 @@ class InformeBEController extends Controller
             if($dayofweek == 0){
                 $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 1;
             }
-            if($diaSemanaQuincena == 6){
+            if($dayofweek == 6){
                 $quincena  = $curr_year . '-0' . $curr_month . '-' . $diaquince + 2;
             }
 
