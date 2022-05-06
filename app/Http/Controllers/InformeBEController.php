@@ -394,6 +394,7 @@ class InformeBEController extends Controller
             'header_for_table_first_page' => $header_for_table_first_page,
             'count_company_per_certificate_state' => $count_company_per_certificate_state,
             'total_companies' => $total_companies,
+            'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);

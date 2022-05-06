@@ -119,3 +119,11 @@
 		<img src="{{ $bars_by_empresa_contratista }}">
 	</div>
 </div>
+<div class="page-pdf">
+	<div class="col-12">
+		<h4>Gr&aacute;fica por empresas sin documentar y aprobadas</h4>
+	</div>
+	<div class="col-12 text-center">
+		<img src="{{ $bars_by_empresa_contratista }}">
+	</div>
+</div>
