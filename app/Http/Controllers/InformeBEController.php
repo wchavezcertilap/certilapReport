@@ -30,7 +30,7 @@ use App\Mail\InformeBEChart;
 
 use Illuminate\Http\Request;
 use PDF;
-use QuickChart;
+use Ianw\Quickchart\QuickChart;
 
 class InformeBEController extends Controller
 {
