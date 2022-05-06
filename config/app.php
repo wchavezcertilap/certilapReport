@@ -181,7 +181,6 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -236,7 +235,6 @@ return [
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'QuickChart' => Ianw\Quickchart\QuickChart::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class
     ],
 
 ];
