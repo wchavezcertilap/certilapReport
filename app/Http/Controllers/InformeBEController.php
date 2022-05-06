@@ -166,7 +166,7 @@ class InformeBEController extends Controller
 
         $chartEmpresasSinDocumentarAprobadas = new QuickChart(array(
             'width' => 600,
-            'height' => 400
+            'height' => 300
         ));
 
         $string_line_for_data_empresas_sin_documentar_empresas_aprobadas = "";
