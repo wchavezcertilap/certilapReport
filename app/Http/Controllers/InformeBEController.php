@@ -82,9 +82,11 @@ class InformeBEController extends Controller
             if($dayofweek == 0){
                 // $quincena  = $curr_year . '-0' . $curr_month . '-' . 16;
                 $quincena  = 16 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00'; //Periodo culmina el lunes 16 despues del domingo 15
+                $diaquince = 16; //Variable para la conversion en UNIX
             }
             if($dayofweek == 6){
                 $quincena  = 17 . '/' . $MAP_MONTH_NUMBER[$curr_month] . '/' . $curr_year . ' 00:00:00';//Periodo culmina el lunes 17 despues del sabado 15
+                $diaquince = 17; //Variable para la conversion en UNIX
             }
         } else {
             // Si es laboral. Sera el 15 pero con el siguiente formato.
@@ -94,11 +96,12 @@ class InformeBEController extends Controller
         $input = '01/' . $MAP_MONTH_NUMBER[$curr_month] . '/' .$curr_year. ' 00:00:00';
         $fecha1 = strtotime($input);
         $fechap = (int)$fecha1-(3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechaf = strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
 
         echo '<br>' . $input; //Primer dia del mes formato normal
         echo '<br>' . $quincena; //quincena formato normal
         echo '<br>' . $fechap; //Primer dia del mes
-        echo '<br>' . strtotime($quincena); //Dia en el que acaba la quincena
+        echo '<br>' . strtotime($fechaf); //Dia en el que acaba la quincena
         exit();
 
         if($curr_month == 0) {
