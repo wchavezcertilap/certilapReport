@@ -178,7 +178,7 @@ class InformeBEController extends Controller
             if ($i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas > 0) {
                 $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= ',';
             }
-            $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= '"'. $value .' ('.  round($percent_empresas_sin_documentar_empresas_aprobadas[$i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas+1], 2) .' %)"';
+            $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= '"'. $value .' ('.  round($percent_empresas_sin_documentar_empresas_aprobadas[$i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas], 2) .' %)"';
             $i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas ++;
         }
         $chartEmpresasSinDocumentarAprobadas->setConfig('{
