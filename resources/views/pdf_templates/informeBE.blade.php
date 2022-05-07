@@ -141,4 +141,15 @@
 	</div>
 </div>
 
+<div class="page">
+	<div class="col-12">
+		<h4>Estad&iacute;sticas de contratistas no documentados hasta la fecha de plazo</h4>
+	</div>
+	<br>
+	<br>
+	<div class="col-12 text-center">
+		<img src="{{ $chart_empresas_sin_documentar_empresas_aprobadas }}">
+	</div>
+</div>
+
 </html>
