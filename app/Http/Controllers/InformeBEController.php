@@ -42,18 +42,18 @@ class InformeBEController extends Controller
     public function index()
     {
         ////MAP OF MONTHS NUMBERS STRINGS
-        $MAP_MONTH_NUMBER[1] = '12';
-        $MAP_MONTH_NUMBER[2] = '01';
-        $MAP_MONTH_NUMBER[3] = '02';
-        $MAP_MONTH_NUMBER[4] = '03';
-        $MAP_MONTH_NUMBER[5] = '04';
-        $MAP_MONTH_NUMBER[6] = '05';
-        $MAP_MONTH_NUMBER[7] = '06';
-        $MAP_MONTH_NUMBER[8] = '07';
-        $MAP_MONTH_NUMBER[9] = '08';
-        $MAP_MONTH_NUMBER[10] = '09';
-        $MAP_MONTH_NUMBER[11] = '10';
-        $MAP_MONTH_NUMBER[12] = '11';
+        $MAP_MONTH_NUMBER[1] = '01';
+        $MAP_MONTH_NUMBER[2] = '02';
+        $MAP_MONTH_NUMBER[3] = '03';
+        $MAP_MONTH_NUMBER[4] = '04';
+        $MAP_MONTH_NUMBER[5] = '05';
+        $MAP_MONTH_NUMBER[6] = '06';
+        $MAP_MONTH_NUMBER[7] = '07';
+        $MAP_MONTH_NUMBER[8] = '08';
+        $MAP_MONTH_NUMBER[9] = '09';
+        $MAP_MONTH_NUMBER[10] = '10';
+        $MAP_MONTH_NUMBER[11] = '11';
+        $MAP_MONTH_NUMBER[12] = '12';
         ////MAP OF MONTHS
         $MAP_MONTH[1] = 'Enero';
         $MAP_MONTH[2] = 'Febrero';
@@ -71,8 +71,8 @@ class InformeBEController extends Controller
         //Dates logic
         $currtme    = time();
         $curr_year  = (int)date("Y", $currtme);
-        // $curr_month  = (int)date("m", $currtme);
-        $curr_month = 4;
+        $curr_month  = (int)date("m", $currtme);
+        $curr_month = 3;
        
         $diaquince = 16;
         ///Este formato para esta operacion de obtener el dia de la semana
@@ -89,7 +89,7 @@ class InformeBEController extends Controller
         //Intervalo de fechas
         $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
-        //echo '<br>' . $fechap; //Primer dia del mes
+       // echo '<br>' . $fechap; //Primer dia del mes
         //echo '<br>' . $fechaf; //Dia en el que acaba la quincena
 
         $fechap2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-17' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
@@ -116,7 +116,7 @@ class InformeBEController extends Controller
         if(isset($periodosIT[0]['id'])){
             $idPerido = $periodosIT[0]['id'];
         }
-
+      
         $rutprincipalR = 97030000;
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
@@ -148,6 +148,9 @@ class InformeBEController extends Controller
         ->whereBetween('certificateDate', array($fechap,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
+
+         //print_r($empresaContratistaSinDocumentar);
+        //exit();
 
          // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
         $estadosConformes = [10,5];
@@ -349,9 +352,10 @@ class InformeBEController extends Controller
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->join('obserTrabComp', 'obserTrabComp.idCompany', '=', 'Company.id')                    
             ->where('periodId',$idPerido)
-            ->orderBy('id', 'ASC')
+            ->orderBy('Company.id', 'ASC')
             ->get(['Company.id','Company.rut','Company.name'])->toArray();
 
+            
         $ruts = [];
         $names = [];
         foreach ($empresasContratista as $key => $value) {
@@ -402,7 +406,7 @@ class InformeBEController extends Controller
             'header_for_table_first_page' => $header_for_table_first_page,
             'count_company_per_certificate_state' => $count_company_per_certificate_state,
             'total_companies' => $total_companies,
-            'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas
+            //'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);
