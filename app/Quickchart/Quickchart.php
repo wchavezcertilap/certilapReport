@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Quickchart;
+
 class QuickChart {
   public $protocol;
   public $host;
