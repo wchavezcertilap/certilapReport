@@ -416,8 +416,8 @@ class InformeBEController extends Controller
 
         $pdf->save( base_path('\public\pdf_temp' . $filename . '.pdf'));
 
-        Mail::to($user)->cc($moya)->send(new InformeBEChart());
-        unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
+        // Mail::to($user)->cc($moya)->send(new InformeBEChart());
+        // unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
     }
 
     /**
