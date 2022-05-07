@@ -42,18 +42,18 @@ class InformeBEController extends Controller
     public function index()
     {
         ////MAP OF MONTHS NUMBERS STRINGS
-        $MAP_MONTH_NUMBER[1] = '01';
-        $MAP_MONTH_NUMBER[2] = '02';
-        $MAP_MONTH_NUMBER[3] = '03';
-        $MAP_MONTH_NUMBER[4] = '04';
-        $MAP_MONTH_NUMBER[5] = '05';
-        $MAP_MONTH_NUMBER[6] = '06';
-        $MAP_MONTH_NUMBER[7] = '07';
-        $MAP_MONTH_NUMBER[8] = '08';
-        $MAP_MONTH_NUMBER[9] = '09';
-        $MAP_MONTH_NUMBER[10] = '10';
-        $MAP_MONTH_NUMBER[11] = '11';
-        $MAP_MONTH_NUMBER[12] = '12';
+        $MAP_MONTH_NUMBER[1] = '12';
+        $MAP_MONTH_NUMBER[2] = '01';
+        $MAP_MONTH_NUMBER[3] = '02';
+        $MAP_MONTH_NUMBER[4] = '03';
+        $MAP_MONTH_NUMBER[5] = '04';
+        $MAP_MONTH_NUMBER[6] = '05';
+        $MAP_MONTH_NUMBER[7] = '06';
+        $MAP_MONTH_NUMBER[8] = '07';
+        $MAP_MONTH_NUMBER[9] = '08';
+        $MAP_MONTH_NUMBER[10] = '09';
+        $MAP_MONTH_NUMBER[11] = '10';
+        $MAP_MONTH_NUMBER[12] = '11';
         ////MAP OF MONTHS
         $MAP_MONTH[1] = 'Enero';
         $MAP_MONTH[2] = 'Febrero';
@@ -71,7 +71,8 @@ class InformeBEController extends Controller
         //Dates logic
         $currtme    = time();
         $curr_year  = (int)date("Y", $currtme);
-        $curr_month  = (int)date("m", $currtme);
+        // $curr_month  = (int)date("m", $currtme);
+        $curr_month = 4;
        
         $diaquince = 16;
         ///Este formato para esta operacion de obtener el dia de la semana
@@ -287,7 +288,7 @@ class InformeBEController extends Controller
             $percent_company_per_certificate_state[$key] = $value * 100 / $total_companies; //percent
         }
         ////By Company type percent
-        $chart = new \QuickChart(array(
+        $chart = new QuickChart(array(
             'width' => 500,
             'height' => 300
         ));
@@ -360,22 +361,22 @@ class InformeBEController extends Controller
         }
         $bars_by_empresa_contratista = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:[";
             $index_counter_names = 0;
-            foreach ($names_no_repeat as $key => $value) {
-                if ($index_counter_names > 0) {
-                    $bars_by_empresa_contratista.= ',';
-                }
-                $bars_by_empresa_contratista.= "'" . strtolower(str_replace('&', '', $value) ) . "'";
-                $index_counter_names ++;
+        foreach ($names_no_repeat as $key => $value) {
+            if ($index_counter_names > 0) {
+                $bars_by_empresa_contratista.= ',';
             }
+            $bars_by_empresa_contratista.= "'" . strtolower(str_replace('&', '', $value) ) . "'";
+            $index_counter_names ++;
+        }
         $bars_by_empresa_contratista.= "],datasets:[{label:%27Por empresa contratista%27, data:[";
-            $index_counter_rut = 0;
-            foreach ($rut_counter as $key => $value) {
-                if ($index_counter_rut > 0) {
-                    $bars_by_empresa_contratista.= ',';
-                }
-                $bars_by_empresa_contratista.= "'" . $value . "'";
-                $index_counter_rut ++;
+        $index_counter_rut = 0;
+        foreach ($rut_counter as $key => $value) {
+            if ($index_counter_rut > 0) {
+                $bars_by_empresa_contratista.= ',';
             }
+            $bars_by_empresa_contratista.= "'" . $value . "'";
+            $index_counter_rut ++;
+        }
         $bars_by_empresa_contratista.= ']}]}}';
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
