@@ -235,7 +235,6 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
-        'QuickChart' => Ianw\Quickchart\QuickChart::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class
     ],
 
