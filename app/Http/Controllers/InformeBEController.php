@@ -30,7 +30,7 @@ use App\Mail\InformeBEChart;
 
 use Illuminate\Http\Request;
 use PDF;
-use QuickChart;
+use App\Quickchart\Quickchart;
 
 class InformeBEController extends Controller
 {
@@ -41,6 +41,19 @@ class InformeBEController extends Controller
      */
     public function index()
     {
+        ////MAP OF MONTHS NUMBERS STRINGS
+        $MAP_MONTH_NUMBER[1] = '01';
+        $MAP_MONTH_NUMBER[2] = '02';
+        $MAP_MONTH_NUMBER[3] = '03';
+        $MAP_MONTH_NUMBER[4] = '04';
+        $MAP_MONTH_NUMBER[5] = '05';
+        $MAP_MONTH_NUMBER[6] = '06';
+        $MAP_MONTH_NUMBER[7] = '07';
+        $MAP_MONTH_NUMBER[8] = '08';
+        $MAP_MONTH_NUMBER[9] = '09';
+        $MAP_MONTH_NUMBER[10] = '10';
+        $MAP_MONTH_NUMBER[11] = '11';
+        $MAP_MONTH_NUMBER[12] = '12';
         ////MAP OF MONTHS
         $MAP_MONTH[1] = 'Enero';
         $MAP_MONTH[2] = 'Febrero';
@@ -57,8 +70,31 @@ class InformeBEController extends Controller
 
         //Dates logic
         $currtme    = time();
-        $curr_month = 4;
         $curr_year  = (int)date("Y", $currtme);
+        $curr_month  = (int)date("m", $currtme);
+       
+        $diaquince = 16;
+        ///Este formato para esta operacion de obtener el dia de la semana
+        $quincena  = $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince;
+        $dayofweek = date('w', strtotime($quincena)); // 0 a 6. 0 Domingo, 6 Sabado
+        if($dayofweek == 0 or $dayofweek == 6){
+            if($dayofweek == 0){
+                $diaquince = 17; //Variable para la conversion en UNIX
+            }
+            if($dayofweek == 6){
+                $diaquince = 18; //Variable para la conversion en UNIX
+            }
+        }
+        //Intervalo de fechas
+        $fechap = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-02' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechaf = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-' . $diaquince ) - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 12
+        //echo '<br>' . $fechap; //Primer dia del mes
+        //echo '<br>' . $fechaf; //Dia en el que acaba la quincena
+
+        $fechap2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-17' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechaf2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month+1] . '-01') - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 
+
+     
 
         if($curr_month == 0) {
             $curr_month = 12;
@@ -77,14 +113,14 @@ class InformeBEController extends Controller
             ->get(['id', 'monthId','year']);
 
         if(isset($periodosIT[0]['id'])){
-            $idPerido = $periodosIT[0]['id']-1;
+            $idPerido = $periodosIT[0]['id'];
         }
 
         $rutprincipalR = 97030000;
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
-            ->orderBy('id', 'ASC')
-            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+            ->orderBy('rut', 'ASC')
+            ->get(['rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
 
         $count_company_per_type[1] = 0;
         $count_company_per_type[2] = 0;
@@ -101,13 +137,68 @@ class InformeBEController extends Controller
         foreach ($count_company_per_type as $key => $value) {
             $percent_company_per_type[$key] = $value * 100 / $total_companies; //Porcentaje por tipo de compañia Torta
         }
-    
+
+
+        /// Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 01-mes al 15-mes
+        $estadosSinDocumentar = [1,2,8];
+        $empresaContratistaSinDocumentar = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)  
+        ->where('periodId',$idPerido)
+        ->whereIn('certificateState',$estadosSinDocumentar)
+        ->whereBetween('certificateDate', array($fechap,  $fechaf))
+        ->orderBy('rut', 'ASC')
+        ->get(['rut','name'])->toArray();
+        
+
+        $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
+        $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $total_companies;
+
+         // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
+        $estadosConformes = [10,5];
+        $empresasContratistaAprobados = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)   
+        ->where('periodId',$idPerido)
+        ->whereIn('certificateState',$estadosConformes)
+        ->whereBetween('certificateState', array($fechap2,  $fechaf))
+        ->orderBy('rut', 'ASC')
+        ->get(['rut','name'])->toArray();
+
+        $_total_de_empresas_aprobadas = count($empresasContratistaAprobados);
+        $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $total_companies;
+
+        $chartEmpresasSinDocumentarAprobadas = new QuickChart(array(
+            'width' => 600,
+            'height' => 300
+        ));
+
+        $string_line_for_data_empresas_sin_documentar_empresas_aprobadas = "";
+        $labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas = ["Sin Documentar","Aprobadas"];
+        $percent_empresas_sin_documentar_empresas_aprobadas = [$_percent_total_de_empresas_sin_documentar, $_percent_total_de_empresas_aprobadas];
+        $i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas = 0;
+        $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas = "";
+        foreach ($labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas as $key => $value) {
+            if ($i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas > 0) {
+                $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= ',';
+            }
+            $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas.= '"'. $value .' ('.  round($percent_empresas_sin_documentar_empresas_aprobadas[$i_labels_for_pie_chart_empresas_sin_documentar_empresas_aprobadas+1], 2) .' %)"';
+            $i_labels_for_pie_chart ++;
+        }
+        $chartEmpresasSinDocumentarAprobadas->setConfig('{
+            "type": "pie",
+            "data": {
+                "datasets": [{
+                    "backgroundColor": ["#6D214F", "#F97F51"],
+                    "data": ['. $string_line_for_data_chart .'],
+                    "label": "Empresas sin documentar/aprobadas"
+                }],
+                "labels": [' . $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas . ']
+            },
+        }');
+        $chart_empresas_sin_documentar_empresas_aprobadas = $chartEmpresasSinDocumentarAprobadas->getUrl();
         $empresasContratistaRecertificacion = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
             ->where('center','LIKE','%(RECERTIFICACION)%')
             ->orWhere('center','LIKE','%RECERTIFICACION')
-            ->orderBy('id', 'ASC')
-            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+            ->orderBy('rut', 'ASC')
+            ->get(['rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
 
         // Porcentaje empresas rectificadas
         $total_rectificadas = sizeof($empresasContratistaRecertificacion);
@@ -196,7 +287,7 @@ class InformeBEController extends Controller
             $percent_company_per_certificate_state[$key] = $value * 100 / $total_companies; //percent
         }
         ////By Company type percent
-        $chart = new QuickChart(array(
+        $chart = new \QuickChart(array(
             'width' => 500,
             'height' => 300
         ));
@@ -303,6 +394,7 @@ class InformeBEController extends Controller
             'header_for_table_first_page' => $header_for_table_first_page,
             'count_company_per_certificate_state' => $count_company_per_certificate_state,
             'total_companies' => $total_companies,
+            'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);
@@ -393,3 +485,4 @@ class InformeBEController extends Controller
         //
     }
 }
+
