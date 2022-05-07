@@ -186,7 +186,7 @@ class InformeBEController extends Controller
             "data": {
                 "datasets": [{
                     "backgroundColor": ["#6D214F", "#F97F51"],
-                    "data": ['. $string_line_for_data_chart .'],
+                    "data": ["'.$_percent_total_de_empresas_sin_documentar.'", "'.$_percent_total_de_empresas_aprobadas.'"],
                     "label": "Empresas sin documentar/aprobadas"
                 }],
                 "labels": [' . $string_line_for_label_chart_empresas_sin_documentar_empresas_aprobadas . ']
