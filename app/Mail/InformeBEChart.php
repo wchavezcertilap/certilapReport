@@ -30,7 +30,6 @@ class InformeBEChart extends Mailable
     {
         $filename = "\informerBE_";
         $file_path = 'C:\inetpub\certilapReport\public\pdf_temp' . $filename . '.pdf';
-        echo "enviar correo";
         return $this->view('emails.informeBE')->attach($file_path);
     }
 }
