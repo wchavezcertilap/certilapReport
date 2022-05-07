@@ -148,10 +148,6 @@ class InformeBEController extends Controller
         ->whereBetween('certificateDate', array($fechap,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
-        
-
-        $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
-        $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $total_companies;
 
          // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
         $estadosConformes = [10,5];
@@ -162,8 +158,11 @@ class InformeBEController extends Controller
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
 
+        $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
         $_total_de_empresas_aprobadas = count($empresasContratistaAprobados);
-        $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $total_companies;
+        $_total_de_empresas_de_este_query = $_total_de_empresas_sin_documentar + $_total_de_empresas_aprobadas;
+        $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $_total_de_empresas_de_este_query;
+        $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $_total_de_empresas_de_este_query;
 
         $chartEmpresasSinDocumentarAprobadas = new QuickChart(array(
             'width' => 600,

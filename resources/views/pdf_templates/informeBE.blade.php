@@ -30,7 +30,7 @@
 </div>
 <div class="page-pdf">
 	<h4 class="text-justify">
-		Estad&iacute;sticas de Empresas por Estado de Certificaci&oacute;n 
+		Estad&iacute;sticas de Contrastitas por estado de certificaci&oacute;n
 	</h4>
 	<div class="col-12">
 		<table style="width:100%;" class="table">
@@ -68,9 +68,6 @@
 	</div>
 </div>
 <div class="page-pdf">
-	<div class="col-12">
-		<h4>Gr&aacute;fica por estado de certificacion</h4>
-	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $chart_per_certificate_state }}">
 	</div>
@@ -80,7 +77,7 @@
 </div>
 <div class="page-pdf">
 	<div class="col-12">
-		<h4>Gr&aacute;fica por tipo de Empresa</h4>
+		<h4>Estad&iacute;sticas de contratistas y sub contratistas</h4>
 	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $chart_by_company_type }}">
@@ -91,7 +88,7 @@
 </div>
 <div class="page-pdf">
 	<div class="col-12">
-		<h4>Gr&aacute;fica por compa&ntilde;&iacute;as recertificadas</h4>
+		<h4>Estad&iacute;sticas de contratistas recertificadas</h4>
 	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $chart_by_rectificadas }}">
@@ -102,7 +99,7 @@
 </div>
 <div class="page-pdf">
 	<div class="col-12">
-		<h4>Gr&aacute;fica por genero de trabajadores</h4>
+		<h4>Estad&iacute;sticas de genero de contratistas</h4>
 	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $chart_genre_worker }}">
@@ -113,7 +110,7 @@
 </div>
 <div class="page-pdf">
 	<div class="col-12">
-		<h4>Gr&aacute;fica por empresas contratistas</h4>
+		<h4>Estad&iacute;sticas de contratistas con observaciones</h4>
 	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $bars_by_empresa_contratista }}">
@@ -121,7 +118,7 @@
 </div>
 <div class="page-pdf">
 	<div class="col-12">
-		<h4>Gr&aacute;fica por empresas contratistas</h4>
+		<h4>Estad&iacute;sticas de contratistas no documentada hasta la fecha de plazo</h4>
 	</div>
 	<div class="col-12 text-center">
 		<img src="{{ $chart_empresas_sin_documentar_empresas_aprobadas }}">
