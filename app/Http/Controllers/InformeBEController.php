@@ -160,9 +160,17 @@ class InformeBEController extends Controller
 
         $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
         $_total_de_empresas_aprobadas = count($empresasContratistaAprobados);
-        $_total_de_empresas_de_este_query = $_total_de_empresas_sin_documentar + $_total_de_empresas_aprobadas;
-        $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $_total_de_empresas_de_este_query;
-        $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $_total_de_empresas_de_este_query;
+        $_percent_total_de_empresas_sin_documentar = 0;
+        $_percent_total_de_empresas_aprobadas = 0;
+        if ( $_total_de_empresas_sin_documentar != 0 ) {
+            $_total_de_empresas_de_este_query = $_total_de_empresas_sin_documentar + $_total_de_empresas_aprobadas;
+            $_percent_total_de_empresas_sin_documentar = $_total_de_empresas_sin_documentar * 100 / $_total_de_empresas_de_este_query;
+        }
+
+        if ( $_total_de_empresas_aprobadas != 0 ) {
+            $_total_de_empresas_de_este_query = $_total_de_empresas_sin_documentar + $_total_de_empresas_aprobadas;
+            $_percent_total_de_empresas_aprobadas = $_total_de_empresas_aprobadas * 100 / $_total_de_empresas_de_este_query;
+        }
 
         $chartEmpresasSinDocumentarAprobadas = new QuickChart(array(
             'width' => 600,
