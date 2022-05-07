@@ -64,9 +64,11 @@ return array(
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Defuse\\Crypto\\' => array($vendorDir . '/defuse/php-encryption/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'DebugBar\\' => array($vendorDir . '/maximebf/debugbar/src/DebugBar'),
     'Cron\\' => array($vendorDir . '/mtdowling/cron-expression/src/Cron'),
     'Collective\\Html\\' => array($vendorDir . '/laravelcollective/html/src'),
     'Barryvdh\\Snappy\\' => array($vendorDir . '/barryvdh/laravel-snappy/src'),
+    'Barryvdh\\Debugbar\\' => array($vendorDir . '/barryvdh/laravel-debugbar/src'),
     'App\\' => array($baseDir . '/app'),
     '' => array($vendorDir . '/ianw/quickchart', $vendorDir . '/nesbot/carbon/src'),
 );
