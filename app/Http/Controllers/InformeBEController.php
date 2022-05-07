@@ -148,8 +148,8 @@ class InformeBEController extends Controller
         ->whereBetween('certificateDate', array($fechap,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
-
-         //print_r($empresaContratistaSinDocumentar);
+        echo '<br>';
+        print_r($empresaContratistaSinDocumentar);
         //exit();
 
          // Tiempos de respuesta de los Contratistas /////////// deacuerdo al periodo tomar la fecha inicial 16-mes al 30-mes
@@ -160,6 +160,8 @@ class InformeBEController extends Controller
         ->whereBetween('certificateState', array($fechap2,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
+        echo '<br>';
+        print_r($empresasContratistaAprobados);
 
         $_total_de_empresas_sin_documentar = count($empresaContratistaSinDocumentar);
         $_total_de_empresas_aprobadas = count($empresasContratistaAprobados);
