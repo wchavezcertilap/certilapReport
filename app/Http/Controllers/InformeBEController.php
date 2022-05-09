@@ -423,6 +423,8 @@ class InformeBEController extends Controller
         print_r($_names_paginated);
         echo '<br>';
         print_r($_data_paginated);
+        echo '<br>';
+        echo $total_pages;
         echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
         exit();
         ///data to template pdf
