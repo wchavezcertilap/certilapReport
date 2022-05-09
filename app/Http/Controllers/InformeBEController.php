@@ -411,10 +411,18 @@ class InformeBEController extends Controller
             $index_counter_rut ++;
         }
         $bars_by_empresa_contratista.= ']}]}}';
+        ///Paginate logic
+        $page_size = 10;
+        $total_records = count($rut_counter);
+        $total_pages = ceil($total_records / $page_size);
+        // $offset = ($page - 1) * $page_size;
+        $offset = 0;
+        $_names_paginated = array_slice($names_no_repeat, $offset, $page_size);
+        $_data_paginated = array_slice($rut_counter, $offset, $page_size);
         echo '<br>';
-        print_r($rut_counter);
+        print_r($_names_paginated);
         echo '<br>';
-        print_r($names_no_repeat);
+        print_r($_data_paginated);
         echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
         exit();
         ///data to template pdf
