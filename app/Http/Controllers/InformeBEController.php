@@ -411,7 +411,10 @@ class InformeBEController extends Controller
             $index_counter_rut ++;
         }
         $bars_by_empresa_contratista.= ']}]}}';
-        //echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
+        echo '<br>';
+        print_r($rut_counter);
+        echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
+        exit();
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
