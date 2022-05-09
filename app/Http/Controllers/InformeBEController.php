@@ -413,6 +413,8 @@ class InformeBEController extends Controller
         $bars_by_empresa_contratista.= ']}]}}';
         echo '<br>';
         print_r($rut_counter);
+        echo '<br>';
+        print_r($names_no_repeat);
         echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
         exit();
         ///data to template pdf
