@@ -242,14 +242,19 @@ class InformeBEController extends Controller
         }
         $chart_by_company_type.= "]}]},options:{plugins:{doughnutlabel:{labels:[{text:'" . $total_companies . "',font:{size:20}},{text:'total'}]}}}}";
         ///By company type bars total count
-        $bars_by_company_type = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Contratista','Sub contratista'],datasets:[{label:%27Por tipo de empresa%27, data:[";
+        $bars_by_company_type = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Contratista','Sub contratista'],datasets:[{data:[";
         foreach ($count_company_per_type as $key => $value) {
             if ($key > 1) {
                 $bars_by_company_type.= ',';
             }
             $bars_by_company_type.= "'" . round($value, 2) . "'";
         }
-        $bars_by_company_type.= ']}]}}';
+        $bars_by_company_type.= ']}]},options: {
+   
+    "legend": {
+                  "display": false,
+    }
+  }}';
         /// By genre chart
         $chart_genre_worker = "https://quickchart.io/chart?c={type:'doughnut',data:{labels:['Mujeres','Hombres'],datasets:[{data:[";
         foreach ($percent_genre as $key => $value) {
@@ -260,10 +265,10 @@ class InformeBEController extends Controller
         }
         $chart_genre_worker.= "]}]},options:{plugins:{doughnutlabel:{labels:[{text:'" . $totalTra . "',font:{size:20}},{text:'total'}]}}}}";
         // By genre bars
-        $bars_by_genre = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Mujeres','Hombres'],datasets:[{label:%27Genero%27,data:[" . $mujeres . "," . $hombres . "]}]}}";
+        $bars_by_genre = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Mujeres','Hombres'],datasets:[{label:%27Genero%27,data:[" . $hombres . "," . $mujeres . "]}]},options: {'legend':{'display': false}}}";
         /// Recitificadas no rectificadas
         $chart_by_rectificadas = "https://quickchart.io/chart?c={type:'doughnut',data:{labels:['Rectificadas','No rectificadas'],datasets:[{data:['" . round($percent_rectificadas, 2) . "','" . round($percent_no_rectificadas, 2) . "']}]},options:{plugins:{doughnutlabel:{labels:[{text:'" . $total_companies . "',font:{size:20}},{text:'total'}]}}}}";
-        $bars_by_rectificadas = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Rectificadas','No rectificadas'],datasets:[{label:%27Por tipo de empresa%27, data:[" . $total_rectificadas . "," . $total_no_recitificadas . "]}]}}";
+        $bars_by_rectificadas = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Rectificadas','No rectificadas'],datasets:[{label:%27Por tipo de empresa%27, data:[" . $total_rectificadas . "," . $total_no_recitificadas . "]}]},options: {'legend':{'display': false}}}";
         /// Charts by estado de certificacion
         $count_company_per_certificate_state[1] = 0;
         $count_company_per_certificate_state[2] = 0;
@@ -296,8 +301,8 @@ class InformeBEController extends Controller
         }
         ////By Company type percent
         $chart = new QuickChart(array(
-            'width' => 500,
-            'height' => 300
+            'width' => 1200,
+            'height' => 800
         ));
 
         $string_line_for_data_chart = "";
@@ -325,15 +330,34 @@ class InformeBEController extends Controller
             $i_labels_for_pie_chart ++;
         }
         $chart->setConfig('{
-            "type": "pie",
+            "type": "outlabeledPie",
+           
             "data": {
+                "labels": [' . $string_line_for_label_chart . '],
                 "datasets": [{
                     "backgroundColor": ["#6D214F", "#F97F51", "#FC427B", "#F77825", "#BDC581", "#82589F", "#996600", "#58B19F", "#1533FF", "#EAB543", "#F97F51"],
                     "data": ['. $string_line_for_data_chart .'],
-                    "label": "Estado de certificacion"
                 }],
-                "labels": [' . $string_line_for_label_chart . ']
             },
+            "options":{
+                "legend": {
+                  "display": true,
+                  "position": "top",
+                  "align": "center",
+                  "fullWidth": true,
+                  "reverse": true,
+                  "labels": {
+                    "fontSize": 25,
+                    "fontFamily": "sans-serif",
+                    "fontColor": "#666666",
+                    "fontStyle": "normal",
+                    "padding": 20,
+                    "text":"total"
+                  }
+                }
+
+            }
+            
         }');
         $chart_per_certificate_state = $chart->getUrl();
         ///By company type bars total count
@@ -344,7 +368,7 @@ class InformeBEController extends Controller
             }
             $bars_by_certificate_state.= "'" . $value . "'";
         }
-        $bars_by_certificate_state.= ']}]}}';
+        $bars_by_certificate_state.= ']}]},options: {"legend":{"display": false}}}';
         /// cantidad de observaciones por contratista /////////// probar este query
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->join('obserTrabComp', 'obserTrabComp.idCompany', '=', 'Company.id')                    
@@ -387,7 +411,7 @@ class InformeBEController extends Controller
             $index_counter_rut ++;
         }
         $bars_by_empresa_contratista.= ']}]}}';
-        echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
+        //echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [

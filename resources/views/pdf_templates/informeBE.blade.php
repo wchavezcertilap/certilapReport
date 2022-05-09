@@ -1,5 +1,6 @@
 <html>
 <head>
+
 <style>
     .page
     {
@@ -15,6 +16,9 @@
 </style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="{{ asset("/js/chartjs-plugin-doughnutlabel.js") }}"></script>
+<script src="{{ asset("/js/chartjs-plugin-piechart-outlabels.min.js") }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <div class="page">
 	<h1 class="text-center">
@@ -77,12 +81,12 @@
 	<br>
 	<br>
 	<div class="col-12 text-center">
-		<img src="{{ $chart_per_certificate_state }}">
+		<img src="{{ $bars_by_certificate_state }}">
 	</div>
 	<br>
 	<br>
 	<div class="col-12 text-center">
-		<img src="{{ $bars_by_certificate_state }}">
+		<img src="{{ $chart_per_certificate_state }}">
 	</div>
 </div>
 <div class="page">
@@ -130,26 +134,6 @@
 	<img src="{{ $bars_by_genre }}">
 	</div>
 </div>
-<div class="page">
-	<div class="col-12">
-		<h4>Estad&iacute;sticas de contratistas con observaciones</h4>
-	</div>
-	<br>
-	<br>
-	<div class="col-12 text-center">
-		<img src="{{ $bars_by_empresa_contratista }}">
-	</div>
-</div>
 
-<div class="page">
-	<div class="col-12">
-		<h4>Estad&iacute;sticas de contratistas no documentados hasta la fecha de plazo</h4>
-	</div>
-	<br>
-	<br>
-	<div class="col-12 text-center">
-		<img src="{{ $chart_empresas_sin_documentar_empresas_aprobadas }}">
-	</div>
-</div>
 
 </html>
