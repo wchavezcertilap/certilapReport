@@ -425,7 +425,7 @@ class InformeBEController extends Controller
         print_r($_data_paginated);
         echo '<br>';
         echo $total_pages;
-        echo '<br>' . $chart_empresas_sin_documentar_empresas_aprobadas;
+        echo '<br>' . $bars_by_empresa_contratista;
         exit();
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
