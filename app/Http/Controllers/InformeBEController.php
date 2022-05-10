@@ -455,11 +455,6 @@ class InformeBEController extends Controller
             }');
             array_push($estadistica_por_empresa_charts, $qc->getUrl());
         }
-        echo '<br>';
-        print_r($estadistica_por_empresa_charts);
-        echo '<br>';
-        echo $total_pages;
-        exit();
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
@@ -499,8 +494,8 @@ class InformeBEController extends Controller
 
         $pdf->save( base_path('\public\pdf_temp' . $filename . '.pdf'));
 
-        // Mail::to($user)->cc($moya)->send(new InformeBEChart());
-        // unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
+        Mail::to($user)->cc($moya)->send(new InformeBEChart());
+        unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
     }
 
     /**
