@@ -415,17 +415,50 @@ class InformeBEController extends Controller
         $page_size = 10;
         $total_records = count($rut_counter);
         $total_pages = ceil($total_records / $page_size);
-        // $offset = ($page - 1) * $page_size;
-        $offset = 0;
-        $_names_paginated = array_slice($names_no_repeat, $offset, $page_size);
-        $_data_paginated = array_slice($rut_counter, $offset, $page_size);
+        $estadistica_por_empresa_charts = [];
+        for ($i=1; $i < $total_pages; $i++) { 
+            $offset = ($i - 1) * $page_size;
+            $_names_paginated = array_slice($names_no_repeat, $offset, $page_size);
+            $_data_paginated = array_slice($rut_counter, $offset, $page_size);
+            $index_counter_names = 0;
+            $string_for_labels = '';
+            foreach ($names_no_repeat as $key => $value) {
+                if ($index_counter_names > 0) {
+                    $string_for_labels.= ',';
+                }
+                $value_no_especial = strtolower(str_replace('ñ', '', $value));
+                $string_for_labels.= "'" . strtolower(str_replace('&', '', $value_no_especial) ) . "'";
+                $index_counter_names ++;
+            }
+            $index_counter_rut = 0;
+            $string_for_data = '';
+            foreach ($rut_counter as $key => $value) {
+                if ($index_counter_rut > 0) {
+                    $string_for_data.= ',';
+                }
+                $string_for_data.= "'" . $value . "'";
+                $index_counter_rut ++;
+            }
+            $qc = new QuickChart(array(
+                'width' => 600,
+                'height' => 300,
+            ));
+            $qc->setConfig('{
+                type: "bar",
+                data: {
+                  labels: ['. $string_for_labels .'],
+                  datasets: [{
+                    label: "Foo",
+                    data: ['. $string_for_data .']
+                  }]
+                }
+            }');
+            array_push($estadistica_por_empresa_charts, $qc->getUrl());
+        }
         echo '<br>';
-        print_r($_names_paginated);
-        echo '<br>';
-        print_r($_data_paginated);
+        print_r($estadistica_por_empresa_charts);
         echo '<br>';
         echo $total_pages;
-        echo '<br>' . $bars_by_empresa_contratista;
         exit();
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
@@ -444,7 +477,8 @@ class InformeBEController extends Controller
             'header_for_table_first_page' => $header_for_table_first_page,
             'count_company_per_certificate_state' => $count_company_per_certificate_state,
             'total_companies' => $total_companies,
-            'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas
+            'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas,
+            'estadistica_por_empresa_charts' => $estadistica_por_empresa_charts,
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);
