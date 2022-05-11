@@ -424,7 +424,7 @@ class InformeBEController extends Controller
             $_data_paginated = array_slice($rut_counter, $offset, $page_size);
             $index_counter_names = 0;
             $string_for_labels = '';
-            foreach ($names_no_repeat as $key => $value) {
+            foreach ($_names_paginated as $key => $value) {
                 if ($index_counter_names > 0) {
                     $string_for_labels.= ',';
                 }
@@ -434,7 +434,7 @@ class InformeBEController extends Controller
             }
             $index_counter_rut = 0;
             $string_for_data = '';
-            foreach ($rut_counter as $key => $value) {
+            foreach ($_data_paginated as $key => $value) {
                 if ($index_counter_rut > 0) {
                     $string_for_data.= ',';
                 }
