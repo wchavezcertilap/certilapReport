@@ -134,6 +134,18 @@
 	<img src="{{ $bars_by_genre }}">
 	</div>
 </div>
-
-
+<div class="page">
+	<div class="col-12">
+		<h4>Estad&iacute;sticas de contratistas con observaciones</h4>
+	</div>
+	<br>
+	<br>
+	<div class="row">
+		@foreach ($estadistica_por_empresa_charts as $grafica)
+		<div class="col-12">
+			<img src="{{ $grafica }}">
+        </div> 
+        @endforeach
+	</div>
+</div>
 </html>

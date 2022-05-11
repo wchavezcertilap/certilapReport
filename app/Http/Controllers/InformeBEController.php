@@ -120,8 +120,10 @@ class InformeBEController extends Controller
         $rutprincipalR = 97030000;
         $empresasContratista = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
             ->where('periodId',$idPerido)
-            ->orderBy('rut', 'ASC')
-            ->get(['rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+            ->orderBy('id', 'ASC')
+            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+
+        // crear tabla con rut+dv, name, 
 
         $count_company_per_type[1] = 0;
         $count_company_per_type[2] = 0;
@@ -412,7 +414,7 @@ class InformeBEController extends Controller
         }
         $bars_by_empresa_contratista.= ']}]}}';
         ///Paginate logic
-        $page_size = 10;
+        $page_size = 5;
         $total_records = count($rut_counter);
         $total_pages = ceil($total_records / $page_size);
         $estadistica_por_empresa_charts = [];
@@ -440,15 +442,15 @@ class InformeBEController extends Controller
                 $index_counter_rut ++;
             }
             $qc = new QuickChart(array(
-                'width' => 600,
-                'height' => 300,
+                'width' => 1000,
+                'height' => 800,
             ));
             $qc->setConfig('{
                 type: "bar",
                 data: {
                   labels: ['. $string_for_labels .'],
                   datasets: [{
-                    label: "Foo",
+                    label: "Contratista",
                     data: ['. $string_for_data .']
                   }]
                 }
@@ -494,8 +496,8 @@ class InformeBEController extends Controller
 
         $pdf->save( base_path('\public\pdf_temp' . $filename . '.pdf'));
 
-        Mail::to($user)->cc($moya)->send(new InformeBEChart());
-        unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
+        // Mail::to($user)->cc($moya)->send(new InformeBEChart());
+        // unlink(base_path('\public\pdf_temp' . $filename . '.pdf'));
     }
 
     /**
