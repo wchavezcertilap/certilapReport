@@ -414,7 +414,7 @@ class InformeBEController extends Controller
         }
         $bars_by_empresa_contratista.= ']}]}}';
         ///Paginate logic
-        $page_size = 5;
+        $page_size = 10;
         $total_records = count($rut_counter);
         $total_pages = ceil($total_records / $page_size);
         $estadistica_por_empresa_charts = [];

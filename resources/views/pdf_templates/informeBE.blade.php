@@ -142,7 +142,7 @@
 	<br>
 	<div class="row">
 		@foreach ($estadistica_por_empresa_charts as $grafica)
-		<div class="col-12">
+		<div class="col-12 text-center">
 			<img src="{{ $grafica }}">
         </div> 
         @endforeach
