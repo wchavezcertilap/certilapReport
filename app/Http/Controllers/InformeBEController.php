@@ -92,7 +92,10 @@ class InformeBEController extends Controller
        // echo '<br>' . $fechap; //Primer dia del mes
         //echo '<br>' . $fechaf; //Dia en el que acaba la quincena
 
-        $fechap2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-17' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechap16 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-17' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechap20 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-21' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechap21 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-22' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
+        $fechap25 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month] . '-26' ) - (3600*20); //PHP DLL PROBLEMS PARA FORMATOS DE FECHA
         $fechaf2 = (int)strtotime( $curr_year . '-' . $MAP_MONTH_NUMBER[$curr_month+1] . '-01') - (3600*20); /// EN ESTE FORMATO PARA FECHAS MAYORES A 
 
      
@@ -122,6 +125,7 @@ class InformeBEController extends Controller
             ->where('periodId',$idPerido)
             ->orderBy('id', 'ASC')
             ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+
 
         // crear tabla con rut+dv, name, 
 
@@ -156,7 +160,7 @@ class InformeBEController extends Controller
         $empresasContratistaAprobados = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)   
         ->where('periodId',$idPerido)
         ->whereIn('certificateState',$estadosConformes)
-        ->whereBetween('certificateState', array($fechap2,  $fechaf))
+        ->whereBetween('certificateState', array($fechap16,  $fechaf))
         ->orderBy('rut', 'ASC')
         ->get(['rut','name'])->toArray();
 
@@ -457,6 +461,115 @@ class InformeBEController extends Controller
             }');
             array_push($estadistica_por_empresa_charts, $qc->getUrl());
         }
+
+        //////////////////////////////////////////////////// documentaod al 15 del mes /////
+        $empresasContratistaDocumentas1al15 = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')   
+        ->where('CertificateHistory.certificateState',6)     
+        ->whereBetween('CertificateHistory.date1', array($fechap,  $fechaf))           
+        ->where('Company.periodId',$idPerido)
+        ->orderBy('Company.id', 'ASC')
+        ->get(['Company.id','Company.rut','Company.name','Company.center'])->toArray();
+
+        foreach ($empresasContratistaDocumentas1al15 as $idC) {
+
+            $IDC[]=$idC['id'];
+            # code...
+        }
+        $countDocumentas1al15 = count($IDC);
+
+        //////////////////////////////////////////////////// documentaod al 16 del mes AL 20 /////
+        $empresasContratistaDocumenta16al20 = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')   
+        ->where('CertificateHistory.certificateState',6)     
+        ->whereBetween('CertificateHistory.date1', array($fechap16,  $fechap20))           
+        ->where('Company.periodId',$idPerido)
+        ->whereNotIn('Company.id', $IDC)
+        ->orderBy('Company.id', 'ASC')
+        ->get(['Company.id','Company.rut','Company.name','Company.center'])->toArray();
+        foreach ($empresasContratistaDocumenta16al20 as $idC) {
+
+            $IDC[]=$idC['id'];
+            # code...
+        }
+        $countDocumentas16al20 = count($IDC);
+        // echo "<pre>";
+        // print_r($empresasContratistaDocumenta16al20);
+        // echo "</pre>";
+           
+        //////////////////////////////////////////////////// documentaod al 21 del mes AL 25/////
+        $empresasContratistaDocumenta21al25 = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+        ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')   
+        ->where('CertificateHistory.certificateState',6)     
+        ->whereBetween('CertificateHistory.date1', array($fechap21,  $fechap25))           
+        ->where('Company.periodId',$idPerido)
+        ->whereNotIn('Company.id', $IDC)
+        ->orderBy('Company.id', 'ASC')
+        ->get(['Company.id','Company.rut','Company.name','Company.center'])->toArray();
+
+        $countDocumentas21al25 = count($empresasContratistaDocumenta21al25);
+      
+        $documentados = intval($countDocumentas1al15) + intval($countDocumentas16al20) + intval($empresasContratistaDocumenta21al25);
+       
+     
+        $sinDocumentar = $total_companies - $documentados;
+         /*  echo "<pre>";
+        print_r($empresasContratistaDocumenta21al25);
+        echo "</pre>";*/
+        
+        ////// CONTEO DE CUANTAS VECES HA QUEDADO NO APROBADO ////
+        $empresasContratistaCertificadas = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
+            ->where('periodId',$idPerido)
+            ->where('certificateState', 5)
+            ->orderBy('id', 'ASC')
+            ->get(['id','rut','dv','name','mainCompanyName','companyTypeId','mainCompanyRut','center','certificateState','certificateDate','activity','workersNumber','periodId','subcontratistaRut','subcontratistaName','subcontratistaDv','motivo_inactivo','direccion','gerencia','tiposerv','companycatid','certificateObservations','contratoPaymentType','servicioId','classserv','adminContrato'])->toArray();
+        $unaNoAprobados = 0;
+        $dosNoAprobados = 0;
+        $tresNoAprobados = 0;
+        $cuatroNoAprobados = 0;
+        $cincoNoAprobados = 0;
+        $cantidadtotal = count($empresasContratistaCertificadas);
+        foreach ($empresasContratistaCertificadas as $empresa) {
+            $cantidadNoAprobados = 0;
+            $historialCertificado = CertificateHistory::where('companyId',$empresa['id'])->where('certificateState',4)->get(['certificateState'])->toArray();
+            
+            $cantidadNoAprobados = count($historialCertificado);
+            if(intval($cantidadNoAprobados) == 1){
+
+                $unaNoAprobados = $unaNoAprobados + 1;
+            }     
+            if(intval($cantidadNoAprobados) == 2){
+
+                $dosNoAprobados = $dosNoAprobados + 1;
+            }
+            if(intval($cantidadNoAprobados) == 3){
+
+                $tresNoAprobados = $tresNoAprobados + 1;
+            }
+            if(intval($cantidadNoAprobados) == 4){
+
+                $cuatroNoAprobados = $cuatroNoAprobados + 1;
+            }
+            if(intval($cantidadNoAprobados) == 5){
+
+                $cincoNoAprobados = $cincoNoAprobados + 1;
+            }
+            if($cantidadNoAprobados == 0 or $historialCertificado[0]['certificateState']==""){
+
+                $idA[]=$empresa['id'];
+            }               
+        }
+        $ceroNoAprobados = count($idA);
+        /*echo $cantidadtotal."<br>";
+        echo $unaNoAprobados."<br>";
+        echo $dosNoAprobados."<br>";
+        echo $tresNoAprobados."<br>";
+        echo $cuatroNoAprobados."<br>";
+        echo $cincoNoAprobados."<br>";
+        echo $ceroNoAprobados."<br>";
+        print_r($idA);*/
+
+
         ///data to template pdf
         $header_for_table_first_page = ['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'];
         $data = [
@@ -476,6 +589,15 @@ class InformeBEController extends Controller
             'total_companies' => $total_companies,
             'chart_empresas_sin_documentar_empresas_aprobadas' => $chart_empresas_sin_documentar_empresas_aprobadas,
             'estadistica_por_empresa_charts' => $estadistica_por_empresa_charts,
+            'countDocumentas1al15' => $countDocumentas1al15,
+            'countDocumentas16al20' => $countDocumentas16al20,
+            'countDocumentas21al25' => $countDocumentas21al25,
+            'sinDocumentar' => $sinDocumentar,
+            'dosNoAprobados' => $dosNoAprobados,
+            'tresNoAprobados' => $tresNoAprobados,
+            'cuatroNoAprobados' => $cuatroNoAprobados,
+            'cincoNoAprobados' => $cincoNoAprobados,
+            'ceroNoAprobados' => $ceroNoAprobados,
         ];
         $pdf = PDF::loadView('pdf_templates.informeBE', $data);
         $pdf->setOption('enable-javascript', true);

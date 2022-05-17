@@ -182,6 +182,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        UKFast\HealthCheck\HealthCheckServiceProvider::class,
     ],
 
     /*

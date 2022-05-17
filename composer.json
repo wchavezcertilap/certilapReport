@@ -20,6 +20,7 @@
         "laraveles/spanish": "^1.2",
         "lcobucci/jwt": "3.3.3",
         "maatwebsite/excel": "^2.1",
+        "ukfast/laravel-health-check": "^1.13",
         "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },
     "require-dev": {

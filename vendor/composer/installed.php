@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-develop',
+    'version' => 'dev-develop',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'af9b01a02c9562eeca41f6fc8398910dbdec7641',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -444,12 +444,12 @@
     ),
     'laravel/laravel' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-develop',
+      'version' => 'dev-develop',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'af9b01a02c9562eeca41f6fc8398910dbdec7641',
     ),
     'laravel/passport' => 
     array (
@@ -1105,6 +1105,15 @@
       array (
       ),
       'reference' => 'b43b05cf43c1b6d849478965062b6ef73e223bb5',
+    ),
+    'ukfast/laravel-health-check' => 
+    array (
+      'pretty_version' => 'v1.13.3',
+      'version' => '1.13.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'bea6e9bb2ef64564359e65445e542653351350f3',
     ),
     'vlucas/phpdotenv' => 
     array (
