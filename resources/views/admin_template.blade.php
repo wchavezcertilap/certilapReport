@@ -374,6 +374,7 @@ desired effect
             <li><a href="{{ route('reporteExtranjero.index') }}">Reporte Extranjeros</a></li>
             @endif
              <li><a href="{{ route('reporteObsCert.index') }}">Reporte Observaciones</a></li>
+             <li><a href="{{ route('informeCer.index') }}">Informe Certificación</a></li>
           </ul>
         </li>
         <li class="treeview">

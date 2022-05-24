@@ -98,5 +98,5 @@ Route::resource('informeBE', 'InformeBEController');
 Route::resource('habilitarFolio', 'HabilitarFolioController');
 Route::resource('habilitarFolio', 'HabilitarFolioController');
 Route::resource('reporteSSOClaro','ReporteSSOClaroController');
-
+Route::resource('informeCer','InformeCerController');
 

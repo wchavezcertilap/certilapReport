@@ -222,6 +222,102 @@
 			</tbody>
 		</table>
 	</div>
+	</br>
+	<div class="col-12">
+		<p><strong>Cumplimiento de plazos en dejar la documentaci&oacute;n corregida: </strong>se deben cumplir los plazos estipulados para que la empresa cuente con su certificado en los tiempos que debe presentarla en la empresa mandante.</p>
+	</div>
+	<div class="col-12">
+		<table style="width:100%;" class="table">
+			<thead>
+				<tr style="background-color:#0984e3;color:white;">
+					<th>
+						Estado
+					</th>
+					<th>
+						N&deg; de Empresas
+					</th>
+					<th>
+						Cumplimento
+					</th>
+					<th>
+						Da&ntilde;os Asociados
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="row-certilap">
+					<td style="background-color:#0984e3;color:white;">
+						3 d&iacute;as
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						{{ $ceroNoAprobados }}
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						100%
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						Contratista cumple los plazos preestablecidos.
+					</td>
+				</tr>
+				<tr class="row-certilap">
+					<td style="background-color:#0984e3;color:white;">
+						5 d&iacute;as 
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						{{ $dosNoAprobados }}
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						80%
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						Contratista debe mejorar los tiempos en resolver sus dudas y corregir documentos observados.
+					</td>
+				</tr>
+				<tr class="row-certilap">
+					<td style="background-color:#0984e3;color:white;">
+						8 d&iacute;as 
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						{{ $tresNoAprobados }}
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						60%
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						Contratista debe mejorar los tiempos en resolver sus dudas y corregir documentaci&oacute;n observada, se debe contactar al usuario con el fin de verificar la causal del atraso.
+					</td>
+				</tr>
+				<tr class="row-certilap">
+					<td style="background-color:#0984e3;color:white;">
+						10 d&iacute;as 
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						{{ $cuatroNoAprobados }}
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						40%
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						Contratista en riesgo y exposici&oacute;n de la mandante es alto dado que no ha subsanado aun observaciones detectadas en la revisi&oacute;n.
+					</td>
+				</tr>
+				<tr class="row-certilap">
+					<td style="background-color:#0984e3;color:white;">
+						11 d&iacute;as o m&aacute;s
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						{{ $cincoNoAprobados }}
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						0%
+					</td>
+					<td style="background-color:#0984e3;color:white;">
+						Mandante debe contactar a la empresa con el fin de verificar la causa del porque la empresa no corrige observaciones.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <div class="page">

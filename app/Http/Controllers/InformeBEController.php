@@ -461,7 +461,9 @@ class InformeBEController extends Controller
             }');
             array_push($estadistica_por_empresa_charts, $qc->getUrl());
         }
-
+         echo "fechap ".$fechap."<br>";
+            echo "fechaf ".$fechaf."<br>";
+            echo "periodo ".$idPerido."<br>";
         //////////////////////////////////////////////////// documentaod al 15 del mes /////
         $empresasContratistaDocumentas1al15 = Contratista::distinct()->where('mainCompanyRut',$rutprincipalR)
         ->join('CertificateHistory', 'CertificateHistory.companyId', '=', 'Company.id')   
@@ -470,6 +472,12 @@ class InformeBEController extends Controller
         ->where('Company.periodId',$idPerido)
         ->orderBy('Company.id', 'ASC')
         ->get(['Company.id','Company.rut','Company.name','Company.center'])->toArray();
+        echo "rut".$rutprincipalR; 
+        echo "<pre>";
+            print_r($empresasContratistaDocumentas1al15);
+            echo "</pre>";
+
+            exit();
 
         foreach ($empresasContratistaDocumentas1al15 as $idC) {
 
@@ -568,6 +576,9 @@ class InformeBEController extends Controller
         echo $cincoNoAprobados."<br>";
         echo $ceroNoAprobados."<br>";
         print_r($idA);*/
+
+
+        //// TIEMPO EN ESTADO 
 
 
         ///data to template pdf
