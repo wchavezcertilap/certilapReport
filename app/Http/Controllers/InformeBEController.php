@@ -339,8 +339,8 @@ class InformeBEController extends Controller
                     $string_line_for_label_chart.= ',';
                 }
                 $string_line_for_label_chart.= '"'. $value .' ('.  round($percent_company_per_certificate_state[$i_labels_for_pie_chart+1], 2) .' %)"';
-                $i_labels_for_pie_chart ++;
             }
+            $i_labels_for_pie_chart ++;
         }
         echo $string_line_for_label_chart;
         $chart->setConfig('{
