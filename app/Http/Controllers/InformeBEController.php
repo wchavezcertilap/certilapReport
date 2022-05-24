@@ -344,6 +344,7 @@ class InformeBEController extends Controller
             $i_labels_for_pie_chart ++;
         }
         echo $string_line_for_label_chart;
+        echo $string_line_for_data_chart;
         $chart->setConfig('{
             "type": "outlabeledPie",
            
