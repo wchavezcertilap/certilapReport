@@ -328,11 +328,7 @@ class InformeBEController extends Controller
         $labels_for_pie_chart = ["Ingresado","Solicitado","Aprobado","No Aprobado","Certificado","Documentado","Historico","Completo","En Proceso","No Conforme","Inactivo"];
         $i_labels_for_pie_chart = 0;
         $string_line_for_label_chart = "";
-        print_r($percent_company_per_certificate_state);
         foreach ($labels_for_pie_chart as $key => $value) {
-            echo '<br>';
-            echo $percent_company_per_certificate_state[$i_labels_for_pie_chart+1];
-            echo '<br>';
             if ($percent_company_per_certificate_state[$i_labels_for_pie_chart+1] > 1) {
                 if ($i_labels_for_pie_chart > 0) { ///Mayor que zero, y si hay elementos anteriores
                     if ($string_line_for_label_chart != "") {
@@ -343,8 +339,6 @@ class InformeBEController extends Controller
             }
             $i_labels_for_pie_chart ++;
         }
-        echo $string_line_for_label_chart;
-        echo $string_line_for_data_chart;
         $chart->setConfig('{
             "type": "outlabeledPie",
            
@@ -376,7 +370,6 @@ class InformeBEController extends Controller
             
         }');
         $chart_per_certificate_state = $chart->getUrl();
-        echo $chart_per_certificate_state;
     
         ///By company type bars total count
         $bars_by_certificate_state = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'],datasets:[{label:%27Por estado de certificacion%27, data:[";
