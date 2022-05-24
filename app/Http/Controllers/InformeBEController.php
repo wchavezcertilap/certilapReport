@@ -329,6 +329,9 @@ class InformeBEController extends Controller
         $i_labels_for_pie_chart = 0;
         $string_line_for_label_chart = "";
         foreach ($labels_for_pie_chart as $key => $value) {
+            echo '<br>';
+            echo $percent_company_per_certificate_state[$i_labels_for_pie_chart+1];
+            echo '<br>';
             if ($percent_company_per_certificate_state[$i_labels_for_pie_chart+1] > 0) {
                 if ($i_labels_for_pie_chart > 0) {
                     $string_line_for_label_chart.= ',';
