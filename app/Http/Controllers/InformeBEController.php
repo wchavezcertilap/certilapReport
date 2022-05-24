@@ -314,12 +314,12 @@ class InformeBEController extends Controller
         $string_line_for_data_chart = "";
         $i_percent_per_certificate_state = 0;
         foreach ($percent_company_per_certificate_state as $key => $value) {
-            if ($i_percent_per_certificate_state > 0) {
-                if ($string_line_for_data_chart != "") {
-                    $string_line_for_data_chart.= ',';
-                }
-            }
             if ($value > 1) {
+                if ($i_percent_per_certificate_state > 0) {
+                    if ($string_line_for_data_chart != "") {
+                        $string_line_for_data_chart.= ',';
+                    }
+                }
                 $string_line_for_data_chart.= "" . round($value, 2) . "";
             }
             $i_percent_per_certificate_state ++;
