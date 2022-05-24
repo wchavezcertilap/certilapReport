@@ -332,7 +332,9 @@ class InformeBEController extends Controller
             if ($i_labels_for_pie_chart > 0) {
                 $string_line_for_label_chart.= ',';
             }
-            $string_line_for_label_chart.= '"'. $value .' ('.  round($percent_company_per_certificate_state[$i_labels_for_pie_chart+1], 2) .' %)"';
+            if ($percent_company_per_certificate_state[$i_labels_for_pie_chart+1] > 0) {
+                $string_line_for_label_chart.= '"'. $value .' ('.  round($percent_company_per_certificate_state[$i_labels_for_pie_chart+1], 2) .' %)"';
+            }
             $i_labels_for_pie_chart ++;
         }
         $chart->setConfig('{
@@ -366,6 +368,7 @@ class InformeBEController extends Controller
             
         }');
         $chart_per_certificate_state = $chart->getUrl();
+        echo $chart_per_certificate_state;
         ///By company type bars total count
         $bars_by_certificate_state = "https://quickchart.io/chart?w=500&h=300&c={type:%27bar%27,data:{labels:['Ingresado','Solicitado','Aprobado','No Aprobado','Certificado','Documentado','Historico','Completo','En Proceso','No Conforme','Inactivo'],datasets:[{label:%27Por estado de certificacion%27, data:[";
         foreach ($count_company_per_certificate_state as $key => $value) {
