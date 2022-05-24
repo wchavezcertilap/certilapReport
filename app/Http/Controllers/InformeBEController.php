@@ -334,8 +334,10 @@ class InformeBEController extends Controller
             echo $percent_company_per_certificate_state[$i_labels_for_pie_chart+1];
             echo '<br>';
             if ($percent_company_per_certificate_state[$i_labels_for_pie_chart+1] > 1) {
-                if ($i_labels_for_pie_chart > 0 && $percent_company_per_certificate_state[$i_labels_for_pie_chart] > 1) {
-                    $string_line_for_label_chart.= ',';
+                if ($i_labels_for_pie_chart > 0) { ///Mayor que zero, y si hay elementos anteriores
+                    if ($string_line_for_label_chart != "") {
+                        $string_line_for_label_chart.= ',';
+                    }
                 }
                 $string_line_for_label_chart.= '"'. $value .' ('.  round($percent_company_per_certificate_state[$i_labels_for_pie_chart+1], 2) .' %)"';
             }
